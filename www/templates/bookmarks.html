@@ -1,0 +1,12 @@
+<ion-view view-title="북마크">
+	<ion-nav-buttons side="right">
+		<a class="button button-icon icon ion-search" href="#/app/search"></a>
+	</ion-nav-buttons>
+	<ion-content>
+		<ion-list>
+			<ion-item ng-repeat="bookmark in bookmarks" href="#/app/bookmarks/{{ bookmark.id }}">
+				{{ bookmark.title }}
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

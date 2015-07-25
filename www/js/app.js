@@ -32,6 +32,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 				controller: 'AppCtrl'
 			})
 
+			.state('app.home', {
+				url: '/home',
+				views: {
+					'menuContent': {
+						templateUrl: 'templates/home.html'
+					}
+				}
+			})
+
 			.state('app.search', {
 				url: '/search',
 				views: {
@@ -41,33 +50,65 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 				}
 			})
 
-			.state('app.browse', {
-				url: '/browse',
+			.state('app.notices', {
+				url: '/notices',
 				views: {
 					'menuContent': {
-						templateUrl: 'templates/browse.html'
-					}
-				}
-			})
-			.state('app.playlists', {
-				url: '/playlists',
-				views: {
-					'menuContent': {
-						templateUrl: 'templates/playlists.html',
-						controller: 'PlaylistsCtrl'
+						templateUrl: 'templates/notices.html',
+						controller: 'NoticesCtrl'
 					}
 				}
 			})
 
-			.state('app.single', {
-				url: '/playlists/:playlistId',
+			.state('app.notice', {
+				url: '/notices/:noticeId',
 				views: {
 					'menuContent': {
-						templateUrl: 'templates/playlist.html',
-						controller: 'PlaylistCtrl'
+						templateUrl: 'templates/notice.html',
+						controller: 'NoticeCtrl'
+					}
+				}
+			})
+
+			.state('app.documents', {
+				url: '/documents',
+				views: {
+					'menuContent': {
+						templateUrl: 'templates/documents.html',
+						controller: 'DocumentsCtrl'
+					}
+				}
+			})
+
+			.state('app.document', {
+				url: '/documents/:documentId',
+				views: {
+					'menuContent': {
+						templateUrl: 'templates/document.html',
+						controller: 'DocumentCtrl'
+					}
+				}
+			})
+
+			.state('app.bookmarks', {
+				url: '/bookmarks',
+				views: {
+					'menuContent': {
+						templateUrl: 'templates/bookmarks.html',
+						controller: 'BookmarksCtrl'
+					}
+				}
+			})
+
+			.state('app.settings', {
+				url: '/settings',
+				views: {
+					'menuContent': {
+						templateUrl: 'templates/settings.html',
+						controller: 'SettingsCtrl'
 					}
 				}
 			});
 		// if none of the above states are matched, use this as the fallback
-		$urlRouterProvider.otherwise('/app/playlists');
+		$urlRouterProvider.otherwise('/app/home');
 	});

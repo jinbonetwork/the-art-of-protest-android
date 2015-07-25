@@ -41,8 +41,8 @@ angular.module('starter.controllers', [])
 		};
 	})
 
-	.controller('PlaylistsCtrl', function ($scope) {
-		$scope.playlists = [
+	.controller('NoticesCtrl', function ($scope) {
+		$scope.notices = [
 			{title: 'Reggae', id: 1},
 			{title: 'Chill', id: 2},
 			{title: 'Dubstep', id: 3},
@@ -52,5 +52,41 @@ angular.module('starter.controllers', [])
 		];
 	})
 
-	.controller('PlaylistCtrl', function ($scope, $stateParams) {
+	.controller('NoticeCtrl', function ($scope, $stateParams) {
+	})
+
+	.controller('DocumentsCtrl', function ($scope) {
+		$scope.documents = [
+			{title: 'Dock1', id: 1},
+			{title: 'Dock2', id: 2},
+			{title: 'Dubstep', id: 3},
+			{title: 'Doc', id: 4},
+			{title: 'Rap', id: 5},
+			{title: 'Cowbell', id: 6}
+		];
+	})
+
+	.controller('DocumentCtrl', function ($scope, $stateParams) {
+	})
+
+	.controller('BookmarksCtrl', function ($scope) {
+		$scope.bookmarks = [
+			{title: 'Bookmark1', id: 1},
+			{title: 'Bookmark2', id: 2},
+			{title: 'Book3', id: 3},
+			{title: 'Indie', id: 4},
+			{title: 'Rap', id: 5},
+			{title: 'Cowbell', id: 6}
+		];
+	})
+
+	.controller('SettingsCtrl', function ($scope) {
+		$scope.settings = [
+			{title: 'Bookmark1', id: 1},
+			{title: 'Bookmark2', id: 2},
+			{title: 'Book3', id: 3},
+			{title: 'Indie', id: 4},
+			{title: 'Rap', id: 5},
+			{title: 'Cowbell', id: 6}
+		];
 	});

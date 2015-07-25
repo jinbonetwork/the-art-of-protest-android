@@ -1,36 +1,55 @@
 <ion-side-menus enable-menu-with-back-views="false">
-  <ion-side-menu-content>
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
+	<ion-side-menu-content>
+		<ion-nav-bar class="bar-stable">
+			<ion-nav-back-button>
+			</ion-nav-back-button>
 
-      <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-        </button>
-      </ion-nav-buttons>
-    </ion-nav-bar>
-    <ion-nav-view name="menuContent"></ion-nav-view>
-  </ion-side-menu-content>
+			<ion-nav-buttons side="left">
+				<button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+				</button>
+			</ion-nav-buttons>
+		</ion-nav-bar>
+		<ion-nav-view name="menuContent"></ion-nav-view>
+	</ion-side-menu-content>
 
-  <ion-side-menu side="left">
-    <ion-header-bar class="bar-stable">
-      <h1 class="title">Left</h1>
-    </ion-header-bar>
-    <ion-content>
-      <ion-list>
-        <ion-item menu-close ng-click="login()">
-          Login
-        </ion-item>
-        <ion-item menu-close href="#/app/search">
-          Search
-        </ion-item>
-        <ion-item menu-close href="#/app/browse">
-          Browse
-        </ion-item>
-        <ion-item menu-close href="#/app/playlists">
-          Playlists
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-side-menu>
+	<ion-side-menu side="left">
+		<ion-header-bar class="bar-stable">
+			<h1 class="title">메뉴</h1>
+		</ion-header-bar>
+		<ion-content>
+			<ion-list>
+				<ion-item menu-close class="item-icon-left" href="#/app/notices">
+					<i class="icon ion-ios-bell"></i>공지
+				</ion-item>
+				<ion-item menu-close class="item-icon-left" href="#/app/home">
+					<i class="icon ion-ios-home"></i>처음으로
+				</ion-item>
+				<div class="item item-divider item-icon-left">
+					<i class="icon ion-ios-list"></i>매뉴얼 목차
+				</div>
+				<!-- documents 시작 -->
+				<ion-item menu-close class="padding-left" href="#/app/documents">
+					집회 전에 준비하기
+				</ion-item>
+				<ion-item menu-close class="padding-left" href="#/app/documents">
+					1. 집회 현장에서
+				</ion-item>
+				<ion-item menu-close class="padding-left" href="#/app/documents">
+					부록
+				</ion-item>
+				<!-- documents 끝 -->
+				<ion-item menu-close class="item-icon-left" href="#/app/bookmarks">
+					<i class="icon ion-ios-star"></i>북마크 보기
+				</ion-item>
+				<ion-item menu-close class="item-icon-left" href="#/app/settings">
+					<i class="icon ion-gear-a"></i>설정
+				</ion-item>
+				<!--
+				<ion-item menu-close ng-click="login()">
+				  Login
+				</ion-item>
+				-->
+			</ion-list>
+		</ion-content>
+	</ion-side-menu>
 </ion-side-menus>

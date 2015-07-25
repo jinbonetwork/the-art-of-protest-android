@@ -1,0 +1,12 @@
+<ion-view view-title="공지사항">
+	<ion-nav-buttons side="right">
+		<a class="button button-icon icon ion-search" href="#/app/search"></a>
+	</ion-nav-buttons>
+	<ion-content>
+		<ion-list>
+			<ion-item ng-repeat="notice in notices" href="#/app/notices/{{ notice.id }}">
+				{{ notice.title }}
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>
