@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
 
-	.run(function ($ionicPlatform, $rootScope) {
+	.run(function ($ionicPlatform, $cordovaSplashscreen, $cordovaToast, $rootScope) {
 		$rootScope.api = "https://public-api.wordpress.com/rest/v1.1/sites/theartofprotest.jinbo.net";
 
 		$ionicPlatform.ready(function () {
@@ -15,6 +15,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 			if (window.cordova && window.cordova.plugins.Keyboard) {
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 				cordova.plugins.Keyboard.disableScroll(true);
+
+				$cordovaToast.showLongBottom('버전을 확인하고 있습니다.').then(function(success) {
+					setTimeout(function() {
+						$cordovaSplashscreen.hide();
+					}, 5000);
+					// success
+				}, function (error) {
+					// error
+				});
 
 			}
 			if (window.StatusBar) {
