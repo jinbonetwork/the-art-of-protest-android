@@ -1,0 +1,40 @@
+# Created by http://www.gitignore.io
+
+### Linux ###
+*~
+
+
+### Intellij ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+
+*.iml
+
+## Directory-based project format:
+.idea/
+
+### Node ###
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Dependency directory
+# Commenting this out is preferred by some people, see
+# https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
+node_modules/
+
+# Users Environment Variables
+.lock-wscript
+
+
+### Bower ###
+bower_components/
+
+
+### Cordova ###
+platforms/
+plugins/
