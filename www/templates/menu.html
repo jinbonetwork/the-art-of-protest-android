@@ -28,8 +28,8 @@
 					<i class="icon ion-ios-list"></i>매뉴얼 목차
 				</ion-item>
 				<!-- documents 시작 -->
-				<ion-item menu-close class="padding-left" ng-repeat="category in categories"
-				          ng-if="category.parent == 2" href="#/app/documents/{{ category.ID }}">
+				<ion-item ng-repeat="category in categories | filter:isManual"
+				          menu-close class="padding-left" href="#/app/documents/{{ category.ID }}">
 					{{ category.name }}
 				</ion-item>
 				<!-- documents 끝 -->

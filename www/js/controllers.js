@@ -2,6 +2,10 @@ angular.module('starter.controllers', [])
 
 	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http) {
 
+		$scope.isManual = function (category) {
+			return category.parent == 2;
+		};
+
 		$http({
 			method: 'GET',
 			url: $scope.api + "/categories",
