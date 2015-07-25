@@ -1,6 +1,20 @@
 angular.module('starter.controllers', [])
 
-	.controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
+	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http) {
+
+		$http({
+			method: 'GET',
+			url: $scope.api + "/categories",
+			params: {
+				'category': 'notice',
+				'status': 'publish'
+			}
+		})
+			.success(function (data, status, headers, config) {
+				$scope.categories = data.categories;
+			})
+			.error(function (data, status, headers, config) {
+			});
 
 		// With the new view caching in Ionic, Controllers are only called
 		// when they are recreated or on app start, instead of every page change.
@@ -41,32 +55,68 @@ angular.module('starter.controllers', [])
 		};
 	})
 
-	.controller('NoticesCtrl', function ($scope) {
+	.controller('NoticesCtrl', function ($scope, $http) {
 		$scope.notices = [
-			{title: 'Reggae', id: 1},
-			{title: 'Chill', id: 2},
-			{title: 'Dubstep', id: 3},
-			{title: 'Indie', id: 4},
-			{title: 'Rap', id: 5},
-			{title: 'Cowbell', id: 6}
+			{title: '내용을 불러오는 중입니다.', id: 0}
 		];
+
+		$http({
+			method: 'GET',
+			url: $scope.api + "/posts/",
+			params: {
+				'category': 'notice',
+				'status': 'publish'
+			}
+		})
+			.success(function (data, status, headers, config) {
+				$scope.notices = data.posts;
+			})
+			.error(function (data, status, headers, config) {
+			});
 	})
 
-	.controller('NoticeCtrl', function ($scope, $stateParams) {
+	.controller('NoticeCtrl', function ($scope, $stateParams, $http) {
+		$http({
+			method: 'GET',
+			url: $scope.api + "/posts/" + $stateParams.noticeId
+		})
+			.success(function (data, status, headers, config) {
+				$scope.notice = data;
+			})
+			.error(function (data, status, headers, config) {
+			});
 	})
 
-	.controller('DocumentsCtrl', function ($scope) {
+	.controller('DocumentsCtrl', function ($scope, $http) {
 		$scope.documents = [
-			{title: 'Dock1', id: 1},
-			{title: 'Dock2', id: 2},
-			{title: 'Dubstep', id: 3},
-			{title: 'Doc', id: 4},
-			{title: 'Rap', id: 5},
-			{title: 'Cowbell', id: 6}
+			{title: '내용을 불러오는 중입니다.', id: 0}
 		];
+
+		$http({
+			method: 'GET',
+			url: $scope.api + "/posts/",
+			params: {
+				'category': 'manual',
+				'status': 'publish'
+			}
+		})
+			.success(function (data, status, headers, config) {
+				$scope.documents = data.posts;
+			})
+			.error(function (data, status, headers, config) {
+			});
 	})
 
-	.controller('DocumentCtrl', function ($scope, $stateParams) {
+	.controller('DocumentCtrl', function ($scope, $stateParams, $http) {
+		$http({
+			method: 'GET',
+			url: $scope.api + "/posts/" + $stateParams.documentId
+		})
+			.success(function (data, status, headers, config) {
+				$scope.document = data;
+			})
+			.error(function (data, status, headers, config) {
+			});
 	})
 
 	.controller('BookmarksCtrl', function ($scope) {

@@ -6,7 +6,9 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers'])
 
-	.run(function ($ionicPlatform) {
+	.run(function ($ionicPlatform, $rootScope) {
+		$rootScope.api = "https://public-api.wordpress.com/rest/v1.1/sites/theartofprotest.jinbo.net";
+
 		$ionicPlatform.ready(function () {
 			// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 			// for form inputs)
