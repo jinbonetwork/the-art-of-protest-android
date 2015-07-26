@@ -1,23 +1,33 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['starter.services'])
 
-	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http) {
-
-		$scope.isManual = function (category) {
+	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, $categoryService, $restService, $log) {
+		var isManual = function (category) {
 			return category.parent == 2;
 		};
 
-		$http({
-			method: 'GET',
-			url: $scope.api + "/categories",
-			params: {
-				'category': 'notice',
-				'status': 'publish'
-			}
-		})
+		//TODO localstorage 이용 버전 확인
+		//TODO 정렬
+
+		$categoryService.all().then(function (result) {
+			$scope.categories = _(result.rows).map(function (obj) {
+				return obj.doc;
+			});
+		}).catch($log.error);
+
+		$restService.getCategories()
 			.success(function (data, status, headers, config) {
-				$scope.categories = data.categories;
+				var manualCategories = _(data.categories).filter(isManual).map(function (obj) {
+					//PouchDB ID 추가
+					obj._id = obj.ID + "";
+					return obj;
+				});
+
+				$categoryService.reset(manualCategories);
+
+				$scope.categories = manualCategories;
 			})
 			.error(function (data, status, headers, config) {
+				$log.error(status);
 			});
 
 		// With the new view caching in Ionic, Controllers are only called
@@ -49,7 +59,7 @@ angular.module('starter.controllers', [])
 
 		// Perform the login action when the user submits the login form
 		$scope.doLogin = function () {
-			console.log('Doing login', $scope.loginData);
+			$log.log('Doing login', $scope.loginData);
 
 			// Simulate a login delay. Remove this and replace with your login
 			// code if using a login system
@@ -59,19 +69,12 @@ angular.module('starter.controllers', [])
 		};
 	})
 
-	.controller('NoticesCtrl', function ($scope, $http) {
+	.controller('NoticesCtrl', function ($restService, $scope) {
 		$scope.notices = [
 			{title: '내용을 불러오는 중입니다.', id: 0}
 		];
 
-		$http({
-			method: 'GET',
-			url: $scope.api + "/posts/",
-			params: {
-				'category': 'notice',
-				'status': 'publish'
-			}
-		})
+		$restService.getNotices()
 			.success(function (data, status, headers, config) {
 				$scope.notices = data.posts;
 			})
@@ -79,11 +82,8 @@ angular.module('starter.controllers', [])
 			});
 	})
 
-	.controller('NoticeCtrl', function ($scope, $stateParams, $http) {
-		$http({
-			method: 'GET',
-			url: $scope.api + "/posts/" + $stateParams.noticeId
-		})
+	.controller('NoticeCtrl', function ($scope, $stateParams, $restService) {
+		$restService.getNotice($stateParams.noticeId)
 			.success(function (data, status, headers, config) {
 				$scope.notice = data;
 			})
@@ -91,19 +91,12 @@ angular.module('starter.controllers', [])
 			});
 	})
 
-	.controller('DocumentsCtrl', function ($scope, $http) {
+	.controller('DocumentsCtrl', function ($scope, $restService) {
 		$scope.documents = [
 			{title: '내용을 불러오는 중입니다.', id: 0}
 		];
 
-		$http({
-			method: 'GET',
-			url: $scope.api + "/posts/",
-			params: {
-				'category': 'manual',
-				'status': 'publish'
-			}
-		})
+		$restService.getDocuments()
 			.success(function (data, status, headers, config) {
 				$scope.documents = data.posts;
 			})
@@ -111,11 +104,8 @@ angular.module('starter.controllers', [])
 			});
 	})
 
-	.controller('DocumentCtrl', function ($scope, $stateParams, $http) {
-		$http({
-			method: 'GET',
-			url: $scope.api + "/posts/" + $stateParams.documentId
-		})
+	.controller('DocumentCtrl', function ($scope, $stateParams, $restService) {
+		$restService.getDocument($stateParams.documentId)
 			.success(function (data, status, headers, config) {
 				$scope.document = data;
 			})
