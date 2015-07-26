@@ -65,14 +65,46 @@ angular.module('starter.controllers', ['starter.services'])
 		}, $log.error);
 	})
 
-	.controller('DocumentCtrl', function ($scope, $stateParams, $documentService, $log) {
-		$documentService.retrieve($stateParams.documentId, function (doc) {
+	.controller('DocumentCtrl', function ($scope, $stateParams, $documentService, $bookmarkService, $log) {
+		var documentId = $stateParams.documentId;
+
+		$documentService.retrieve(documentId, function (doc) {
 			$scope.document = doc;
+			$scope.loaded = true;
 		}, $log.error);
+
+		$bookmarkService.exists(documentId, function (result, rev) {
+			$scope.bookmarked = result;
+			$scope.bookmarkRev = rev;
+		}, $log.error);
+
+		$scope.toggleBookmark = function () {
+			var doc = $scope.document;
+
+			if ($scope.bookmarked == true) {
+				$bookmarkService.remove(
+					doc.ID,
+					$scope.bookmarkRev,
+					function () {
+						$scope.bookmarked = false;
+						$scope.bookmarkRev = null;
+					},
+					$log.error)
+			} else {
+				$bookmarkService.add(
+					doc.ID,
+					doc.title,
+					function (id, rev) {
+						$scope.bookmarked = true;
+						$scope.bookmarkRev = rev;
+					},
+					$log.error)
+			}
+		}
 	})
 
 	.controller('BookmarksCtrl', function ($scope, $bookmarkService, $log) {
-		$bookmarkService.allDemo(function (bookmarks) {
+		$bookmarkService.retrieveAll(function (bookmarks) {
 			$scope.bookmarks = bookmarks;
 		}, $log.error);
 	})

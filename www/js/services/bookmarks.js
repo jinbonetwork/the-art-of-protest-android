@@ -1,6 +1,6 @@
 angular.module('starter.services')
 
-	.service('$bookmarkService', function ($log) {
+	.service('$bookmarkDb', function ($log) {
 		var DB_NAME = "bookmarks";
 		var db = new PouchDB(DB_NAME);
 
@@ -10,21 +10,74 @@ angular.module('starter.services')
 			});
 		};
 
-		this.allDemo = function (successCallback, errorCallback) {
-			successCallback([
-				{title: 'Bookmark1', id: 1},
-				{title: 'Bookmark2', id: 2},
-				{title: 'Book3', id: 3},
-				{title: 'Indie', id: 4},
-				{title: 'Rap', id: 5},
-				{title: 'Cowbell', id: 6}
-			]);
+		this.put = function (id, title) {
+			return db.put({
+				"_id": id,
+				"type": "document",
+				"title": title
+			});
+		};
+
+		this.get = function (id) {
+			return db.get(id);
+		};
+
+		this.remove = function (id, rev) {
+			return db.remove(id, rev);
 		};
 
 		this.reset = function (notices) {
-			db.destroy().then(function () {
-				db = new PouchDB(DB_NAME);
-				return db.bulkDocs(notices);
-			}).catch($log.error);
+			db.destroy()
+				.then(function () {
+					db = new PouchDB(DB_NAME);
+					return db.bulkDocs(notices);
+				})
+				.catch($log.error);
+		}
+	})
+
+	.service('$bookmarkService', function ($bookmarkDb) {
+		this.retrieveAll = function (successCallback, errorCallback) {
+			$bookmarkDb.list()
+				.then(function (result) {
+					var bookmarks = _(result.rows).map(function (obj) {
+						return obj.doc;
+					});
+
+					successCallback(bookmarks);
+				})
+				.catch(errorCallback);
+		};
+
+		this.add = function (docId, title, successCallback, errorCallback) {
+			$bookmarkDb.put(docId + "", title)
+				.then(function (result) {
+					successCallback(result.id, result.rev);
+				})
+				.catch(errorCallback);
+		};
+
+		this.remove = function (docId, docRev, successCallback, errorCallback) {
+			console.log(docId)
+			console.log(docRev)
+			$bookmarkDb.remove(docId + "", docRev)
+				.then(function (result) {
+					successCallback();
+				})
+				.catch(errorCallback);
+		};
+
+		this.exists = function (docId, successCallback, errorCallback) {
+			$bookmarkDb.get(docId + "")
+				.then(function (result) {
+					successCallback(true, result._rev);
+				})
+				.catch(function (err) {
+					if (err.status == 404) {
+						successCallback(false);
+					} else {
+						errorCallback(err)
+					}
+				});
 		}
 	});

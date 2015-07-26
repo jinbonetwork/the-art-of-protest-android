@@ -13,10 +13,12 @@ angular.module('starter.services')
 		};
 
 		this.reset = function (categories) {
-			db.destroy().then(function () {
-				db = new PouchDB(DB_NAME);
-				return db.bulkDocs(categories);
-			}).catch($log.error);
+			db.destroy()
+				.then(function () {
+					db = new PouchDB(DB_NAME);
+					return db.bulkDocs(categories);
+				})
+				.catch($log.error);
 		}
 	})
 

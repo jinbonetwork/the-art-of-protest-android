@@ -4,7 +4,7 @@
 	</ion-nav-buttons>
 	<ion-content>
 		<ion-list>
-			<ion-item ng-repeat="bookmark in bookmarks" href="#/app/bookmarks/{{ bookmark.id }}">
+			<ion-item ng-repeat="bookmark in bookmarks" href="#/app/documents/{{ bookmark._id }}">
 				{{ bookmark.title }}
 			</ion-item>
 		</ion-list>

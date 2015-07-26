@@ -21,10 +21,12 @@ angular.module('starter.services')
 		};
 
 		this.reset = function (notices) {
-			db.destroy().then(function () {
-				db = new PouchDB(DB_NAME);
-				return db.bulkDocs(notices);
-			}).catch($log.error);
+			db.destroy()
+				.then(function () {
+					db = new PouchDB(DB_NAME);
+					return db.bulkDocs(notices);
+				})
+				.catch($log.error);
 		}
 	})
 
@@ -65,7 +67,7 @@ angular.module('starter.services')
 
 					$restService.getNotice(noticeId)
 						.success(function (data, status, headers, config) {
-							data._id = data.ID;
+							data._id = data.ID + "";
 							$noticeCacheService.put(data);
 
 							successCallback(data);
