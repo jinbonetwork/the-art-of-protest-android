@@ -1,34 +1,12 @@
 angular.module('starter.controllers', ['starter.services'])
 
-	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, $categoryService, $restService, $log) {
-		var isManual = function (category) {
-			return category.parent == 2;
-		};
-
+	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, $categoryService, $log) {
 		//TODO localstorage 이용 버전 확인
 		//TODO 정렬
 
-		$categoryService.all().then(function (result) {
-			$scope.categories = _(result.rows).map(function (obj) {
-				return obj.doc;
-			});
-		}).catch($log.error);
-
-		$restService.getCategories()
-			.success(function (data, status, headers, config) {
-				var manualCategories = _(data.categories).filter(isManual).map(function (obj) {
-					//PouchDB ID 추가
-					obj._id = obj.ID + "";
-					return obj;
-				});
-
-				$categoryService.reset(manualCategories);
-
-				$scope.categories = manualCategories;
-			})
-			.error(function (data, status, headers, config) {
-				$log.error(status);
-			});
+		$categoryService.retrieveAll(function (categories) {
+			$scope.categories = categories;
+		}, $log.error);
 
 		// With the new view caching in Ionic, Controllers are only called
 		// when they are recreated or on app start, instead of every page change.
@@ -69,68 +47,38 @@ angular.module('starter.controllers', ['starter.services'])
 		};
 	})
 
-	.controller('NoticesCtrl', function ($restService, $scope) {
-		$scope.notices = [
-			{title: '내용을 불러오는 중입니다.', id: 0}
-		];
-
-		$restService.getNotices()
-			.success(function (data, status, headers, config) {
-				$scope.notices = data.posts;
-			})
-			.error(function (data, status, headers, config) {
-			});
+	.controller('NoticesCtrl', function ($noticeService, $scope, $log) {
+		$noticeService.retrieveAll(function (notices) {
+			$scope.notices = notices;
+		}, $log.error);
 	})
 
-	.controller('NoticeCtrl', function ($scope, $stateParams, $restService) {
-		$restService.getNotice($stateParams.noticeId)
-			.success(function (data, status, headers, config) {
-				$scope.notice = data;
-			})
-			.error(function (data, status, headers, config) {
-			});
+	.controller('NoticeCtrl', function ($scope, $stateParams, $noticeService, $log) {
+		$noticeService.retrieve($stateParams.noticeId, function (notice) {
+			$scope.notice = notice
+		}, $log.error);
 	})
 
-	.controller('DocumentsCtrl', function ($scope, $restService) {
-		$scope.documents = [
-			{title: '내용을 불러오는 중입니다.', id: 0}
-		];
-
-		$restService.getDocuments()
-			.success(function (data, status, headers, config) {
-				$scope.documents = data.posts;
-			})
-			.error(function (data, status, headers, config) {
-			});
+	.controller('DocumentsCtrl', function ($scope, $documentService, $log) {
+		$documentService.retrieveAll(function (docs) {
+			$scope.documents = docs;
+		}, $log.error);
 	})
 
-	.controller('DocumentCtrl', function ($scope, $stateParams, $restService) {
-		$restService.getDocument($stateParams.documentId)
-			.success(function (data, status, headers, config) {
-				$scope.document = data;
-			})
-			.error(function (data, status, headers, config) {
-			});
+	.controller('DocumentCtrl', function ($scope, $stateParams, $documentService, $log) {
+		$documentService.retrieve($stateParams.documentId, function (doc) {
+			$scope.document = doc;
+		}, $log.error);
 	})
 
-	.controller('BookmarksCtrl', function ($scope) {
-		$scope.bookmarks = [
-			{title: 'Bookmark1', id: 1},
-			{title: 'Bookmark2', id: 2},
-			{title: 'Book3', id: 3},
-			{title: 'Indie', id: 4},
-			{title: 'Rap', id: 5},
-			{title: 'Cowbell', id: 6}
-		];
+	.controller('BookmarksCtrl', function ($scope, $bookmarkService, $log) {
+		$bookmarkService.allDemo(function (bookmarks) {
+			$scope.bookmarks = bookmarks;
+		}, $log.error);
 	})
 
-	.controller('SettingsCtrl', function ($scope) {
-		$scope.settings = [
-			{title: 'Bookmark1', id: 1},
-			{title: 'Bookmark2', id: 2},
-			{title: 'Book3', id: 3},
-			{title: 'Indie', id: 4},
-			{title: 'Rap', id: 5},
-			{title: 'Cowbell', id: 6}
-		];
+	.controller('SettingsCtrl', function ($scope, $settingService, $log) {
+		$settingService.allDemo(function (settings) {
+			$scope.settings = settings;
+		}, $log.error);
 	});

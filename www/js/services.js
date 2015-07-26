@@ -68,27 +68,7 @@ angular.module('starter.services', [])
 		};
 	})
 
-	.service('$categoryService', function ($log) {
-		//PouchDB.debug.enable('*'); //TODO DELETEME
-
-		var db = new PouchDB('categories');
-
-		this.all = function () {
-			return db.allDocs({
-				include_docs: true
-			});
-		};
-
-		this.reset = function (categories) {
-			db.destroy().then(function () {
-				db = new PouchDB("categories");
-				return db.bulkDocs(categories);
-			}).catch($log.error);
-		}
-	})
-
 	.service('$db', function () {
-		this.notices = new PouchDB('notices');
 		this.documents = new PouchDB('documents');
 		this.bookmarks = new PouchDB('bookmarks');
 	});
