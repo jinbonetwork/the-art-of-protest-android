@@ -14,7 +14,8 @@
 
 	<ion-side-menu side="left">
 		<ion-header-bar class="bar-stable">
-			<h1 class="title">메뉴</h1>
+			<button class="button button-icon icon" ng-click="toggleLeftSideMenu()"
+			        ng-class="'ion-android-close'"></button>
 		</ion-header-bar>
 		<ion-content>
 			<ion-list>
@@ -25,7 +26,7 @@
 					<i class="icon ion-ios-home"></i>처음으로
 				</ion-item>
 				<ion-item menu-close class="item-icon-left" href="#/app/documents">
-					<i class="icon ion-ios-list"></i>매뉴얼 목차
+					<i class="icon ion-ios-list-outline"></i>매뉴얼
 				</ion-item>
 				<!-- documents 시작 -->
 				<ion-item ng-repeat="category in categories"

@@ -1,6 +1,7 @@
 angular.module('starter.controllers', ['starter.services'])
 
-	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, $categoryService, $log) {
+	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, $categoryService,
+									 $ionicSideMenuDelegate, $log) {
 		//TODO localstorage 이용 버전 확인
 		//TODO 정렬
 
@@ -44,6 +45,10 @@ angular.module('starter.controllers', ['starter.services'])
 			$timeout(function () {
 				$scope.closeLogin();
 			}, 1000);
+		};
+
+		$scope.toggleLeftSideMenu = function () {
+			$ionicSideMenuDelegate.toggleLeft();
 		};
 	})
 
