@@ -70,7 +70,8 @@ angular.module('starter.controllers', ['starter.services'])
 		}, $log.error);
 	})
 
-	.controller('DocumentCtrl', function ($scope, $stateParams, $documentService, $bookmarkService, $log) {
+	.controller('DocumentCtrl', function ($scope, $stateParams, $documentService, $bookmarkService, $cordovaToast,
+										  $log) {
 		var documentId = $stateParams.documentId;
 
 		$documentService.retrieve(documentId, function (doc) {
@@ -93,6 +94,7 @@ angular.module('starter.controllers', ['starter.services'])
 					function () {
 						$scope.bookmarked = false;
 						$scope.bookmarkRev = null;
+						$cordovaToast.showShortTop('북마크가 해제되었습니다.');
 					},
 					$log.error)
 			} else {
@@ -102,6 +104,7 @@ angular.module('starter.controllers', ['starter.services'])
 					function (id, rev) {
 						$scope.bookmarked = true;
 						$scope.bookmarkRev = rev;
+						$cordovaToast.showShortTop('북마크가 설정되었습니다.');
 					},
 					$log.error)
 			}

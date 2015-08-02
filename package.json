@@ -19,7 +19,8 @@
     "cordova-plugin-console",
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
-    "com.ionic.keyboard"
+    "com.ionic.keyboard",
+    "nl.x-services.plugins.toast"
   ],
   "cordovaPlatforms": [
     "android"
