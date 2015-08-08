@@ -4,7 +4,6 @@ angular.module('starter.services')
 		var DB_NAME = "bookmarks";
 		var db = new PouchDB(DB_NAME);
 
-		//TODO DB에서 주고받는 시간 속도 문제는 싱글턴에서 캐시 객체를 가지고 있는 것으로 해결할 수 있다.
 		this.list = function () {
 			return db.allDocs({
 				include_docs: true
@@ -34,7 +33,7 @@ angular.module('starter.services')
 					return db.bulkDocs(notices);
 				})
 				.catch($log.error);
-		}
+		};
 	})
 
 	.service('$bookmarkService', function ($bookmarkDb) {
@@ -59,8 +58,6 @@ angular.module('starter.services')
 		};
 
 		this.remove = function (docId, docRev, successCallback, errorCallback) {
-			console.log(docId)
-			console.log(docRev)
 			$bookmarkDb.remove(docId + "", docRev)
 				.then(function (result) {
 					successCallback();
