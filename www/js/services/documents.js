@@ -27,7 +27,11 @@ angular.module('starter.services')
 					return db.bulkDocs(notices);
 				})
 				.catch($log.error);
-		}
+		};
+
+		this.query = function (map, options) {
+			return db.query(map, options);
+		};
 	})
 
 	.service('$documentService', function ($restService, $documentCacheService) {
@@ -77,4 +81,26 @@ angular.module('starter.services')
 				})
 				.catch(errorCallback);
 		};
+
+		/**
+		 * 문서 검색
+		 *
+		 * @param {string} keyword
+		 * @param {number} limit
+		 * @returns {Promise}
+		 */
+		this.query = function (keyword, limit, successCallback, errorCallback) {
+			return $documentCacheService.query(function (doc) {
+				// TODO workaround. global.keyword 참조
+				var keyword = global["keyword"];
+				if (doc.title.indexOf(keyword) > -1 || doc.content.indexOf(keyword) > -1)
+					emit(doc);
+			}, {include_docs: true, limit: limit})
+				.then(successCallback)
+				.catch(errorCallback);
+		};
 	});
+
+// TODO db.query의 eval() 문제 해결을 위한 workaround
+var global = {};
+global["keyword"] = "";

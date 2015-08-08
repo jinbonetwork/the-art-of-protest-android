@@ -53,9 +53,15 @@ angular.module('starter.controllers', ['starter.services'])
 	})
 
 	.controller('NoticesCtrl', function ($noticeService, $scope, $log) {
-		$noticeService.retrieveAll(function (notices) {
-			$scope.notices = notices;
-		}, $log.error);
+		$scope.refreshItems = function () {
+			$noticeService.retrieveAll(function (notices) {
+				$scope.notices = notices;
+			}, $log.error);
+
+			$scope.$broadcast('scroll.refreshComplete');
+		};
+
+		$scope.refreshItems();
 	})
 
 	.controller('NoticeCtrl', function ($scope, $stateParams, $noticeService, $log) {
@@ -65,9 +71,15 @@ angular.module('starter.controllers', ['starter.services'])
 	})
 
 	.controller('DocumentsCtrl', function ($scope, $documentService, $log) {
-		$documentService.retrieveAll(function (docs) {
-			$scope.documents = docs;
-		}, $log.error);
+		$scope.refreshItems = function () {
+			$documentService.retrieveAll(function (docs) {
+				$scope.documents = docs;
+			}, $log.error);
+
+			$scope.$broadcast('scroll.refreshComplete');
+		};
+
+		$scope.refreshItems();
 	})
 
 	.controller('DocumentCtrl', function ($scope, $stateParams, $documentService, $bookmarkService, $cordovaToast,
@@ -112,6 +124,42 @@ angular.module('starter.controllers', ['starter.services'])
 					$log.error)
 			}
 		}
+	})
+
+	.controller('SearchCtrl', function ($scope, $ionicFilterBar, $documentService, $timeout, $log) {
+		var filterBarInstance;
+
+		$scope.items = [];
+
+		$scope.showFilterBar = function () {
+			filterBarInstance = $ionicFilterBar.show({
+				items: $scope.items,
+				update: function (filteredItems) {
+					$scope.items = filteredItems;
+					$scope.$apply();
+				},
+				filter: function (array, expression, comparator) {
+					var that = this;
+					// TODO workaround. global.keyword 참조
+					global["keyword"] = expression;
+					$documentService.query(expression, 20, function (result) {
+						if (result.rows.length > 0) {
+							that.update(_(result.rows).map(function (row) {
+								return row.doc
+							}));
+						} else {
+							that.update([{"title": "해당되는 문서가 없습니다."}])
+						}
+					}, function () {
+						that.update([{"title": "찾는 중 오류가 발생했습니다."}])
+					});
+
+					return [{"title": "찾는 중입니다..."}]
+				}
+			});
+		};
+
+		$scope.showFilterBar()
 	})
 
 	.controller('BookmarksCtrl', function ($scope, $bookmarkService, $log) {
