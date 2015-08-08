@@ -19,25 +19,25 @@
 		</ion-header-bar>
 		<ion-content>
 			<ion-list>
-				<ion-item menu-close class="item-icon-left" href="#/app/notices">
+				<ion-item menu-close ui-sref-active="menu-active" class="item item-icon-left" ui-sref="app.notices">
 					<i class="icon ion-ios-bell"></i>공지
 				</ion-item>
-				<ion-item menu-close class="item-icon-left" href="#/app/home">
+				<ion-item menu-close ui-sref-active="menu-active" class="item-icon-left" ui-sref="app.home">
 					<i class="icon ion-ios-home"></i>처음으로
 				</ion-item>
-				<ion-item menu-close class="item-icon-left" href="#/app/documents">
+				<ion-item menu-close ui-sref-active="menu-active" class="item-icon-left" ui-sref="app.documents">
 					<i class="icon ion-ios-list-outline"></i>매뉴얼
 				</ion-item>
 				<!-- documents 시작 -->
 				<ion-item ng-repeat="category in categories"
-				          menu-close class="padding-left" href="#/app/documents/{{ category.ID }}">
+				          menu-close ui-sref-active="menu-active" class="padding-left" ui-sref="app.document({documentId : category.ID})">
 					{{ category.name }}
 				</ion-item>
 				<!-- documents 끝 -->
-				<ion-item menu-close class="item-icon-left" href="#/app/bookmarks">
+				<ion-item menu-close ui-sref-active="menu-active" class="item-icon-left" ui-sref="app.bookmarks">
 					<i class="icon ion-ios-star"></i>북마크 보기
 				</ion-item>
-				<ion-item menu-close class="item-icon-left" href="#/app/settings">
+				<ion-item menu-close ui-sref-active="menu-active" class="item-icon-left" ui-sref="app.settings">
 					<i class="icon ion-gear-a"></i>설정
 				</ion-item>
 				<!--

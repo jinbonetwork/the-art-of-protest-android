@@ -1,1 +1,16 @@
 /* Empty. Add your own CSS if you like */
+
+/*TODO 기본 포함된 대응 아이템 찾아 변경 */
+button.bookmark {
+	color: #FF7200 !important;
+}
+
+/*TODO 기본 포함인 .activated로 변경*/
+.menu-active {
+	color: #FF7200 !important;
+}
+
+.menu-notice {
+	background-color: #FF7200 !important;
+	color: white !important;
+}
