@@ -163,6 +163,23 @@ angular.module('starter.controllers', ['starter.services'])
 	})
 
 	.controller('BookmarksCtrl', function ($scope, $bookmarkService, $log) {
+		$scope.data = {
+			showDelete: false
+		};
+
+		$scope.onItemDelete = function (bookmark) {
+			console.info(bookmark);
+			$bookmarkService.remove(
+				bookmark._id,
+				bookmark._rev,
+				function () {
+					$cordovaToast.showShortTop('북마크가 해제되었습니다.');
+				},
+				$log.error);
+
+			$scope.bookmarks.splice($scope.bookmarks.indexOf(bookmark), 1);
+		};
+
 		$bookmarkService.retrieveAll(function (bookmarks) {
 			$scope.bookmarks = bookmarks;
 		}, $log.error);
