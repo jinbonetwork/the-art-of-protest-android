@@ -130,6 +130,7 @@ angular.module('starter.controllers', ['starter.services'])
 				$bookmarkService.add(
 					post.ID,
 					post.title,
+					post.excerpt,
 					function (id, rev) {
 						$scope.bookmarked = true;
 						$scope.bookmarkRev = rev;

@@ -6,7 +6,7 @@
 	<ion-content>
 		<ion-list show-delete="data.showDelete">
 			<ion-item ng-repeat="bookmark in bookmarks" href="#/app/posts/{{ bookmark._id }}">
-				{{ bookmark.title }}
+				{{ bookmark.title }} {{ bookmark.excerpt }}
 				<ion-delete-button class="ion-minus-circled"
 				                   ng-click="onItemDelete(bookmark)">
 				</ion-delete-button>

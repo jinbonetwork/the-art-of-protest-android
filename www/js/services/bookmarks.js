@@ -10,11 +10,12 @@ angular.module('starter.services')
 			});
 		};
 
-		this.put = function (id, title) {
+		this.put = function (id, title, excerpt) {
 			return db.put({
 				"_id": id,
 				"type": "document",
-				"title": title
+				"title": title,
+				"excerpt": excerpt
 			});
 		};
 
@@ -49,8 +50,8 @@ angular.module('starter.services')
 				.catch(errorCallback);
 		};
 
-		this.add = function (docId, title, successCallback, errorCallback) {
-			$bookmarkDb.put(docId + "", title)
+		this.add = function (docId, title, excerpt, successCallback, errorCallback) {
+			$bookmarkDb.put(docId + "", title, excerpt)
 				.then(function (result) {
 					successCallback(result.id, result.rev);
 				})
