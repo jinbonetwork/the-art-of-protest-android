@@ -83,7 +83,7 @@ angular.module('starter.controllers', ['starter.services'])
 	})
 
 	.controller('PostCtrl', function ($scope, $stateParams, $postService, $bookmarkService, $cordovaToast,
-										  $log) {
+									  $log) {
 		var postId = $stateParams.postId;
 
 		//TODO 라우팅 전에 수행되도록 변경
