@@ -162,7 +162,7 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.showFilterBar()
 	})
 
-	.controller('BookmarksCtrl', function ($scope, $bookmarkService, $log) {
+	.controller('BookmarksCtrl', function ($scope, $bookmarkService, $log, $cordovaToast) {
 		$scope.data = {
 			showDelete: false
 		};
@@ -181,6 +181,7 @@ angular.module('starter.controllers', ['starter.services'])
 
 		$bookmarkService.retrieveAll(function (bookmarks) {
 			$scope.bookmarks = bookmarks;
+			$scope.$apply();
 		}, $log.error);
 	})
 
