@@ -177,10 +177,12 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.showFilterBar()
 	})
 
-	.controller('BookmarksCtrl', function ($scope, $bookmarkService, $log, $cordovaToast) {
+	.controller('BookmarksCtrl', function ($scope, $bookmarkService, bookmarks, $log, $cordovaToast) {
 		$scope.data = {
 			showDelete: false
 		};
+
+		$scope.bookmarks = bookmarks;
 
 		$scope.onItemDelete = function (bookmark) {
 			$bookmarkService.remove(
@@ -193,11 +195,6 @@ angular.module('starter.controllers', ['starter.services'])
 
 			$scope.bookmarks.splice($scope.bookmarks.indexOf(bookmark), 1);
 		};
-
-		$bookmarkService.retrieveAll(function (bookmarks) {
-			$scope.bookmarks = bookmarks;
-			$scope.$apply();
-		}, $log.error);
 	})
 
 	.controller('SettingsCtrl', function ($scope, $settingService, $log) {

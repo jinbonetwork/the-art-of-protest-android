@@ -105,6 +105,19 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'uiRou
 						templateUrl: 'templates/bookmarks.html',
 						controller: 'BookmarksCtrl'
 					}
+				},
+				resolve: {
+					"bookmarks": function ($bookmarkService, $q) {
+						var deferred = $q.defer();
+
+						$bookmarkService.retrieveAll(function (bookmarks) {
+							deferred.resolve(bookmarks);
+						}, function (err) {
+							deferred.reject(err)
+						});
+
+						return deferred.promise;
+					}
 				}
 			})
 
