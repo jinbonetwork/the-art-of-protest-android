@@ -168,7 +168,6 @@ angular.module('starter.controllers', ['starter.services'])
 		};
 
 		$scope.onItemDelete = function (bookmark) {
-			console.info(bookmark);
 			$bookmarkService.remove(
 				bookmark._id,
 				bookmark._rev,
