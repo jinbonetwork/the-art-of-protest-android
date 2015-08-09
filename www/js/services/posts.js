@@ -1,7 +1,7 @@
 angular.module('starter.services')
 
-	.service('$documentCacheService', function ($log) {
-		var DB_NAME = "documents";
+	.service('$postCacheService', function ($log) {
+		var DB_NAME = "posts";
 		var db = new PouchDB(DB_NAME);
 
 		this.list = function () {
@@ -34,9 +34,9 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$documentService', function ($restService, $documentCacheService) {
+	.service('$postService', function ($restService, $postCacheService) {
 		this.retrieveAll = function (successCallback, errorCallback) {
-			$documentCacheService.list()
+			$postCacheService.list()
 				.then(function (result) {
 					var docs = _(result.rows).map(function (obj) {
 						return obj.doc;
@@ -53,7 +53,7 @@ angular.module('starter.services')
 									return obj;
 								});
 
-							$documentCacheService.reset(posts);
+							$postCacheService.reset(posts);
 
 							successCallback(posts);
 						})
@@ -64,14 +64,14 @@ angular.module('starter.services')
 		};
 
 		this.retrieve = function (docId, successCallback, errorCallback) {
-			$documentCacheService.get(docId)
+			$postCacheService.get(docId)
 				.then(function (result) {
 					successCallback(result);
 
 					$restService.getDocument(docId)
 						.success(function (data, status, headers, config) {
 							data._id = data.ID + "";
-							$documentCacheService.put(data);
+							$postCacheService.put(data);
 
 							successCallback(data);
 						})
@@ -90,7 +90,7 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.query = function (keyword, limit, successCallback, errorCallback) {
-			return $documentCacheService.query(function (doc) {
+			return $postCacheService.query(function (doc) {
 				// TODO workaround. global.keyword 참조
 				var keyword = global["keyword"];
 				if (doc.title.indexOf(keyword) > -1 || doc.content.indexOf(keyword) > -1)

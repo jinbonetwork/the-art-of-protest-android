@@ -75,22 +75,22 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'start
 				}
 			})
 
-			.state('app.documents', {
-				url: '/documents',
+			.state('app.posts', {
+				url: '/posts',
 				views: {
 					'menuContent': {
-						templateUrl: 'templates/documents.html',
-						controller: 'DocumentsCtrl'
+						templateUrl: 'templates/posts.html',
+						controller: 'PostsCtrl'
 					}
 				}
 			})
 
-			.state('app.document', {
-				url: '/documents/:documentId',
+			.state('app.post', {
+				url: '/posts/:postId',
 				views: {
 					'menuContent': {
-						templateUrl: 'templates/document.html',
-						controller: 'DocumentCtrl'
+						templateUrl: 'templates/post.html',
+						controller: 'PostCtrl'
 					}
 				}
 			})

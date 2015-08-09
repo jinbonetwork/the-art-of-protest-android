@@ -70,10 +70,10 @@ angular.module('starter.controllers', ['starter.services'])
 		}, $log.error);
 	})
 
-	.controller('DocumentsCtrl', function ($scope, $documentService, $log) {
+	.controller('PostsCtrl', function ($scope, $postService, $log) {
 		$scope.refreshItems = function () {
-			$documentService.retrieveAll(function (docs) {
-				$scope.documents = docs;
+			$postService.retrieveAll(function (posts) {
+				$scope.posts = posts;
 			}, $log.error);
 
 			$scope.$broadcast('scroll.refreshComplete');
@@ -82,27 +82,27 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.refreshItems();
 	})
 
-	.controller('DocumentCtrl', function ($scope, $stateParams, $documentService, $bookmarkService, $cordovaToast,
+	.controller('PostCtrl', function ($scope, $stateParams, $postService, $bookmarkService, $cordovaToast,
 										  $log) {
-		var documentId = $stateParams.documentId;
+		var postId = $stateParams.postId;
 
 		//TODO 라우팅 전에 수행되도록 변경
-		$documentService.retrieve(documentId, function (doc) {
-			$scope.document = doc;
+		$postService.retrieve(postId, function (post) {
+			$scope.post = post;
 			$scope.loaded = true;
 		}, $log.error);
 
-		$bookmarkService.exists(documentId, function (result, rev) {
+		$bookmarkService.exists(postId, function (result, rev) {
 			$scope.bookmarked = result;
 			$scope.bookmarkRev = rev;
 		}, $log.error);
 
 		$scope.toggleBookmark = function () {
-			var doc = $scope.document;
+			var post = $scope.post;
 
 			if ($scope.bookmarked == true) {
 				$bookmarkService.remove(
-					doc.ID,
+					post.ID,
 					$scope.bookmarkRev,
 					function () {
 						$scope.bookmarked = false;
@@ -113,8 +113,8 @@ angular.module('starter.controllers', ['starter.services'])
 					$log.error)
 			} else {
 				$bookmarkService.add(
-					doc.ID,
-					doc.title,
+					post.ID,
+					post.title,
 					function (id, rev) {
 						$scope.bookmarked = true;
 						$scope.bookmarkRev = rev;
@@ -126,7 +126,7 @@ angular.module('starter.controllers', ['starter.services'])
 		}
 	})
 
-	.controller('SearchCtrl', function ($scope, $ionicFilterBar, $documentService, $timeout, $log) {
+	.controller('SearchCtrl', function ($scope, $ionicFilterBar, $postService, $timeout, $log) {
 		var filterBarInstance;
 
 		$scope.items = [];
@@ -142,7 +142,7 @@ angular.module('starter.controllers', ['starter.services'])
 					var that = this;
 					// TODO workaround. global.keyword 참조
 					global["keyword"] = expression;
-					$documentService.query(expression, 20, function (result) {
+					$postService.query(expression, 20, function (result) {
 						if (result.rows.length > 0) {
 							that.update(_(result.rows).map(function (row) {
 								return row.doc
