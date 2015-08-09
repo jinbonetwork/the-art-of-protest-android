@@ -25,8 +25,7 @@ angular.module('starter.services', [])
 				method: 'GET',
 				url: apiRoot + "/categories",
 				params: {
-					'category': 'notice',
-					'status': 'publish'
+					'fields': 'ID,name,parent'
 				}
 			});
 		};
@@ -54,6 +53,7 @@ angular.module('starter.services', [])
 				method: 'GET',
 				url: apiRoot + "/posts/",
 				params: {
+					'type': 'page',
 					'category': 'manual',
 					'status': 'publish'
 				}
