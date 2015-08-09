@@ -14,3 +14,17 @@ button.bookmark {
 	background-color: #FF7200 !important;
 	color: white !important;
 }
+
+/*
+ * http://docs.angularjs.org/api/ng/directive/ngShow#usage_animations
+ */
+.list .item.item-accordion {
+	transition: 0.09s all linear;
+}
+.list .item.item-accordion.ng-hide {
+	line-height: 0;
+}
+.list .item.item-accordion.ng-hide-add,
+.list .item.item-accordion.ng-hide-remove {
+	display: block !important;
+}

@@ -26,29 +26,49 @@ angular.module('starter.services')
 		this.retrieveAll = function (successCallback, errorCallback) {
 			$categoryCacheService.list()
 				.then(function (result) {
-					var categories = _(result.rows).map(function (obj) {
-						return obj.doc;
-					});
+					var categoryOrder = function (categories) {
+						return categories.order;
+					};
+
+					var categories = _.chain(result.rows)
+						.map(function (obj) {
+							return obj.doc;
+						})
+						.sortBy(categoryOrder)
+						.value();
 
 					successCallback(categories);
 
-					$restService.getCategories()
+					$restService.getPostsByCategory()
 						.success(function (data, status, headers, config) {
-							var isManual = function (category) {
-								return category.parent == 2;
-							};
+							var categories = _.chain(data.posts)
+								.groupBy(function (post) {
+									var title = Object.keys(post.categories)[0];
+									return post.categories[title].ID;
+								})
+								.map(function (posts) {
+									var head = posts[0];
+									var categoryTitle = Object.keys(head.categories)[0];
+									var category = head.categories[categoryTitle];
+									var order = _.chain(posts).map(function (p) {
+										return p.menu_order
+									}).min().value();
 
-							var manualCategories = _(data.categories)
-								.filter(isManual)
-								.map(function (obj) {
-									//PouchDB ID 추가
-									obj._id = obj.ID + "";
-									return obj;
-								});
+									return {
+										"ID": category.ID + "", // PouchDB를 위해 String 처리
+										"title": categoryTitle,
+										"posts": _(posts).sortBy(function (p) {
+											return p.menu_order
+										}),
+										"order": order
+									};
+								})
+								.sortBy(categoryOrder)
+								.value();
 
-							$categoryCacheService.reset(manualCategories);
+							$categoryCacheService.reset(categories);
 
-							successCallback(manualCategories);
+							successCallback(categories);
 						})
 						.error(function (data, status, headers, config) {
 							errorCallback(status);

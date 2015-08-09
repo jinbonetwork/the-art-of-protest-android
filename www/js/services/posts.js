@@ -36,22 +36,31 @@ angular.module('starter.services')
 
 	.service('$postService', function ($restService, $postCacheService) {
 		this.retrieveAll = function (successCallback, errorCallback) {
+			var postOrder = function (post) {
+				return post.menu_order;
+			};
+
 			$postCacheService.list()
 				.then(function (result) {
-					var docs = _(result.rows).map(function (obj) {
-						return obj.doc;
-					});
+					var docs = _.chain(result.rows)
+						.map(function (obj) {
+							return obj.doc;
+						})
+						.sortBy(postOrder)
+						.value();
 
 					successCallback(docs);
 
 					$restService.getDocuments()
 						.success(function (data, status, headers, config) {
-							var posts = _(data.posts)
+							var posts = _.chain(data.posts)
 								.map(function (obj) {
 									//PouchDB ID 추가
 									obj._id = obj.ID + "";
 									return obj;
-								});
+								})
+								.sortBy(postOrder)
+								.value();
 
 							$postCacheService.reset(posts);
 

@@ -34,9 +34,15 @@ angular.module('starter.services')
 		this.retrieveAll = function (successCallback, errorCallback) {
 			$noticeCacheService.list()
 				.then(function (result) {
-					var notices = _(result.rows).map(function (obj) {
-						return obj.doc;
-					});
+					var notices = _.chain(result.rows)
+						.map(function (obj) {
+							return obj.doc;
+						})
+						.sortBy(function (notice) {
+							return notice.ID;
+						})
+						.reverse()
+						.value();
 
 					successCallback(notices);
 

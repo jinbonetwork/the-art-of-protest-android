@@ -20,12 +20,19 @@ angular.module('starter.services', [])
 	.service('$restService', function ($http, $log) {
 		var apiRoot = "https://public-api.wordpress.com/rest/v1.1/sites/theartofprotest.jinbo.net";
 
-		this.getCategories = function () {
+		/**
+		 * 카테고리 목록과 각 카테고리에 속한 문서 목록을 함께 가져온다.
+		 * @returns {*}
+		 */
+		this.getPostsByCategory = function () {
 			return $http({
 				method: 'GET',
-				url: apiRoot + "/categories",
+				url: apiRoot + "/posts/",
 				params: {
-					'fields': 'ID,name,parent'
+					'type': 'page',
+					'category': 'manual',
+					'status': 'publish',
+					'fields': 'ID,title,modified,categories,menu_order'
 				}
 			});
 		};
@@ -36,7 +43,9 @@ angular.module('starter.services', [])
 				url: apiRoot + "/posts/",
 				params: {
 					'category': 'notice',
-					'status': 'publish'
+					'status': 'publish',
+					'order': 'desc',
+					'order_by': 'date'
 				}
 			});
 		};

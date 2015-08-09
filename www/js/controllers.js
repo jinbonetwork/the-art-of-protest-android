@@ -3,11 +3,26 @@ angular.module('starter.controllers', ['starter.services'])
 	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, $categoryService,
 									 $ionicSideMenuDelegate, $log) {
 		//TODO localstorage 이용 버전 확인
-		//TODO 정렬
 
 		$categoryService.retrieveAll(function (categories) {
 			$scope.categories = categories;
 		}, $log.error);
+
+		/*
+		 * if given group is the selected group, deselect it
+		 * else, select the given group
+		 */
+		$scope.toggleGroup = function (group) {
+			if ($scope.isGroupShown(group)) {
+				$scope.shownGroup = null;
+			} else {
+				$scope.shownGroup = group;
+			}
+		};
+
+		$scope.isGroupShown = function (group) {
+			return $scope.shownGroup === group;
+		};
 
 		// With the new view caching in Ionic, Controllers are only called
 		// when they are recreated or on app start, instead of every page change.
