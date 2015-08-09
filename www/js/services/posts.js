@@ -51,7 +51,7 @@ angular.module('starter.services')
 
 					successCallback(docs);
 
-					$restService.getDocuments()
+					$restService.getPosts()
 						.success(function (data, status, headers, config) {
 							var posts = _.chain(data.posts)
 								.map(function (obj) {
@@ -77,7 +77,7 @@ angular.module('starter.services')
 				.then(function (result) {
 					successCallback(result);
 
-					$restService.getDocument(docId)
+					$restService.getPost(docId)
 						.success(function (data, status, headers, config) {
 							data._id = data.ID + "";
 							$postCacheService.put(data);

@@ -57,7 +57,7 @@ angular.module('starter.services', [])
 			})
 		};
 
-		this.getDocuments = function () {
+		this.getPosts = function () {
 			return $http({
 				method: 'GET',
 				url: apiRoot + "/posts/",
@@ -69,7 +69,7 @@ angular.module('starter.services', [])
 			})
 		};
 
-		this.getDocument = function (documentId) {
+		this.getPost = function (documentId) {
 			return $http({
 				method: 'GET',
 				url: apiRoot + "/posts/" + documentId
