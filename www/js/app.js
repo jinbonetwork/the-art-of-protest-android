@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'uiRouterStyles', 'starter.controllers'])
 
 	.run(function ($ionicPlatform, $cordovaSplashscreen, $cordovaToast) {
 		$ionicPlatform.ready(function () {
@@ -92,6 +92,9 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'start
 						templateUrl: 'templates/post.html',
 						controller: 'PostCtrl'
 					}
+				},
+				data: {
+					css: 'css/post.css'
 				}
 			})
 
