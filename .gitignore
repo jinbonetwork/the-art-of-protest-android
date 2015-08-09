@@ -33,7 +33,7 @@ node_modules/
 
 ### Bower ###
 bower_components/
-
+www/lib/
 
 ### Cordova ###
 platforms/
