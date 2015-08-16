@@ -1,8 +1,6 @@
 angular.module('starter.services')
 
 	.service('$categoryCacheService', function (pouchDB, $log) {
-		//PouchDB.debug.enable('*'); //TODO DELETEME
-
 		var DB_NAME = "categories";
 		var db = pouchDB(DB_NAME);
 
