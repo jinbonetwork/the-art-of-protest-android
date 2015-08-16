@@ -20,7 +20,8 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
     "com.ionic.keyboard",
-    "nl.x-services.plugins.toast"
+    "nl.x-services.plugins.toast",
+    "phonegap-plugin-contentsync"
   ],
   "cordovaPlatforms": [
     "android"
