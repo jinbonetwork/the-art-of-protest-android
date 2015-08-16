@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'uiRouterStyles', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'uiRouterStyles', 'starter.controllers'])
 
 	.run(function ($ionicPlatform, $cordovaSplashscreen, $cordovaToast) {
 		$ionicPlatform.ready(function () {

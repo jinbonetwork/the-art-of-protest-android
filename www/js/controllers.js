@@ -122,7 +122,6 @@ angular.module('starter.controllers', ['starter.services'])
 					function () {
 						$scope.bookmarked = false;
 						$scope.bookmarkRev = null;
-						$scope.$apply();
 						$cordovaToast.showShortTop('북마크가 해제되었습니다.');
 					},
 					$log.error)
@@ -134,7 +133,6 @@ angular.module('starter.controllers', ['starter.services'])
 					function (id, rev) {
 						$scope.bookmarked = true;
 						$scope.bookmarkRev = rev;
-						$scope.$apply();
 						$cordovaToast.showShortTop('북마크가 설정되었습니다.');
 					},
 					$log.error)
@@ -152,7 +150,6 @@ angular.module('starter.controllers', ['starter.services'])
 				items: $scope.items,
 				update: function (filteredItems) {
 					$scope.items = filteredItems;
-					$scope.$apply();
 				},
 				filter: function (array, expression, comparator) {
 					var that = this;

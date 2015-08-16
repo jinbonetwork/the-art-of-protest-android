@@ -1,8 +1,8 @@
 angular.module('starter.services')
 
-	.service('$settingService', function ($log) {
+	.service('$settingService', function (pouchDB, $log) {
 		var DB_NAME = "settings";
-		var db = new PouchDB(DB_NAME);
+		var db = pouchDB(DB_NAME);
 
 		this.list = function () {
 			return db.allDocs({
@@ -23,7 +23,7 @@ angular.module('starter.services')
 
 		this.reset = function (notices) {
 			db.destroy().then(function () {
-				db = new PouchDB(DB_NAME);
+				db = pouchDB(DB_NAME);
 				return db.bulkDocs(notices);
 			}).catch($log.error);
 		}

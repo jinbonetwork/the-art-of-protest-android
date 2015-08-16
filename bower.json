@@ -8,6 +8,7 @@
     "underscore": "~1.8.3",
     "pouchdb-upsert": "~1.1.1",
     "ionic-filter-bar": "~1.0.4",
+    "angular-pouchdb": "~2.1.1",
     "angular-ui-router-styles": "~0.0.6"
   }
 }

@@ -1,10 +1,10 @@
 angular.module('starter.services')
 
-	.service('$categoryCacheService', function ($log) {
+	.service('$categoryCacheService', function (pouchDB, $log) {
 		//PouchDB.debug.enable('*'); //TODO DELETEME
 
 		var DB_NAME = "categories";
-		var db = new PouchDB(DB_NAME);
+		var db = pouchDB(DB_NAME);
 
 		this.list = function () {
 			return db.allDocs({
@@ -15,7 +15,7 @@ angular.module('starter.services')
 		this.reset = function (categories) {
 			db.destroy()
 				.then(function () {
-					db = new PouchDB(DB_NAME);
+					db = pouchDB(DB_NAME);
 					return db.bulkDocs(categories);
 				})
 				.catch($log.error);
