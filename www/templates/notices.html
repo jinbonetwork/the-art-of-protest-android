@@ -6,8 +6,8 @@
 		<ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()">
 		</ion-refresher>
 		<ion-list>
-			<ion-item ng-repeat="notice in notices" href="#/app/notices/{{ notice.ID }}">
-				{{ notice.title }}
+			<ion-item ng-repeat="notice in notices" href="#/app/notices/{{notice.ID}}">
+				{{notice.title}}
 			</ion-item>
 		</ion-list>
 	</ion-content>

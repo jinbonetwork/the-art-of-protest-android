@@ -1,13 +1,30 @@
 angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'uiRouterStyles', 'starter.controllers'])
 
-	.run(function ($ionicPlatform, $cordovaSplashscreen, $cordovaToast) {
+	.run(function ($ionicPlatform, $ionicBackdrop, $syncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope) {
+		// 라우팅 오류 기록
+		$rootScope.$on('$stateChangeError', $log.error);
+
 		$ionicPlatform.ready(function () {
+			//동기화 시작
+			$log.info("동기화를 시작합니다.");
+			$ionicBackdrop.retain();
+			$syncService.sync()
+				.then(function (result) {
+					$log.info("동기화에 성공했습니다.");
+					$ionicBackdrop.release();
+				})
+				.catch(function (err) {
+					$log.error("동기화에 실패했습니다.");
+				});
+			//동기화 끝
+
 			// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 			// for form inputs)
 			if (window.cordova && window.cordova.plugins.Keyboard) {
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 				cordova.plugins.Keyboard.disableScroll(true);
 
+				// TODO Modal로 변경
 				$cordovaToast.showLongBottom('버전을 확인하고 있습니다.')
 					.then(function (success) {
 						setTimeout(function () {
@@ -33,7 +50,12 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				url: '/app',
 				abstract: true,
 				templateUrl: 'templates/menu.html',
-				controller: 'AppCtrl'
+				controller: 'AppCtrl',
+				resolve: {
+					'categories': function ($categoryService) {
+						return $categoryService.list();
+					}
+				}
 			})
 
 			.state('app.home', {
@@ -62,6 +84,11 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 						templateUrl: 'templates/notices.html',
 						controller: 'NoticesCtrl'
 					}
+				},
+				resolve: {
+					"notices": function ($noticeService) {
+						return $noticeService.list();
+					}
 				}
 			})
 
@@ -72,6 +99,14 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 						templateUrl: 'templates/notice.html',
 						controller: 'NoticeCtrl'
 					}
+				},
+				resolve: {
+					"noticeId": function ($stateParams) {
+						return $stateParams.noticeId;
+					},
+					"notice": function ($noticeService, noticeId) {
+						return $noticeService.get(noticeId);
+					}
 				}
 			})
 
@@ -81,6 +116,11 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					'menuContent': {
 						templateUrl: 'templates/posts.html',
 						controller: 'PostsCtrl'
+					}
+				},
+				resolve: {
+					"posts": function ($postService) {
+						return $postService.list();
 					}
 				}
 			})
@@ -95,6 +135,17 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				},
 				data: {
 					css: 'css/post.css'
+				},
+				resolve: {
+					"postId": function ($stateParams) {
+						return $stateParams.postId;
+					},
+					"post": function (postId, $postService) {
+						return $postService.get(postId);
+					},
+					"initBookmarkRev": function (postId, $bookmarkService) {
+						return $bookmarkService.exists(postId);
+					}
 				}
 			})
 
@@ -107,14 +158,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				},
 				resolve: {
-					"bookmarks": function ($bookmarkService, $q) {
-						return $q(function(resolve, reject){
-							$bookmarkService.retrieveAll(function (bookmarks) {
-								resolve(bookmarks);
-							}, function (err) {
-								reject(err)
-							});
-						});
+					"bookmarks": function ($bookmarkService) {
+						return $bookmarkService.list();
 					}
 				}
 			})

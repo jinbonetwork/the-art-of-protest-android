@@ -22,7 +22,7 @@ angular.module('starter.services', [])
 
 		/**
 		 * 카테고리 목록과 각 카테고리에 속한 문서 목록을 함께 가져온다.
-		 * @returns {*}
+		 * @returns {Promise}
 		 */
 		this.getPostsByCategory = function () {
 			return $http({
@@ -37,6 +37,9 @@ angular.module('starter.services', [])
 			});
 		};
 
+		/**
+		 * @returns {Promise}
+		 */
 		this.getNotices = function () {
 			return $http({
 				method: 'GET',
@@ -50,6 +53,9 @@ angular.module('starter.services', [])
 			});
 		};
 
+		/**
+		 * @returns {Promise}
+		 */
 		this.getNotice = function (noticeId) {
 			return $http({
 				method: 'GET',
@@ -57,6 +63,10 @@ angular.module('starter.services', [])
 			})
 		};
 
+		/**
+		 * 서버로부터 목록을 내려받는다.
+		 * @returns {Promise}
+		 */
 		this.getPosts = function () {
 			return $http({
 				method: 'GET',
@@ -69,10 +79,15 @@ angular.module('starter.services', [])
 			})
 		};
 
-		this.getPost = function (documentId) {
+		/**
+		 * 서버로부터 항목을 내려받는다.
+		 * @param {Number} postId 내려받을 항목의 ID
+		 * @returns {Promise}
+		 */
+		this.getPost = function (postId) {
 			return $http({
 				method: 'GET',
-				url: apiRoot + "/posts/" + documentId
+				url: apiRoot + "/posts/" + postId
 			});
 		};
 	})

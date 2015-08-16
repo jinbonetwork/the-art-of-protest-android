@@ -14,9 +14,9 @@ angular.module('starter.services')
 			return db.get(id);
 		};
 
-		this.put = function (obj) {
-			return db.upsert(obj._id, function (doc) {
-				return doc.modified != obj.modified;
+		this.put = function (notice) {
+			return db.upsert(notice._id, function (doc) {
+				return doc.modified != notice.modified;
 			});
 		};
 
@@ -30,58 +30,83 @@ angular.module('starter.services')
 		}
 	})
 
-	.service('$noticeService', function ($restService, $noticeCacheService) {
-		this.retrieveAll = function (successCallback, errorCallback) {
-			$noticeCacheService.list()
-				.then(function (result) {
-					var notices = _.chain(result.rows)
-						.map(function (obj) {
-							return obj.doc;
-						})
-						.sortBy(function (notice) {
-							return notice.ID;
-						})
-						.reverse()
-						.value();
+	.service('$noticeService', function ($restService, $noticeCacheService, $q) {
 
-					successCallback(notices);
+		/**
+		 * 서버로부터 새로 목록을 내려받아 캐시한다.
+		 * @returns {Promise}
+		 */
+		this.syncAll = function () {
+			return $q(function (resolve, reject) {
+				$restService.getNotices()
+					.success(function (data, status, headers, config) {
+						var posts = _(data.posts)
+							.map(function (obj) {
+								//PouchDB ID 추가
+								obj._id = obj.ID + "";
+								return obj;
+							});
 
-					$restService.getNotices()
-						.success(function (data, status, headers, config) {
-							var posts = _(data.posts)
-								.map(function (obj) {
-									//PouchDB ID 추가
-									obj._id = obj.ID + "";
-									return obj;
-								});
+						$noticeCacheService.reset(posts);
 
-							$noticeCacheService.reset(posts);
-
-							successCallback(posts);
-						})
-						.error(function (data, status, headers, config) {
-							errorCallback(data);
-						});
-				})
-				.catch(errorCallback);
+						resolve(posts);
+					})
+					.error(function (data, status, headers, config) {
+						reject(data);
+					});
+			})
 		};
 
-		this.retrieve = function (noticeId, successCallback, errorCallback) {
-			$noticeCacheService.get(noticeId)
-				.then(function (result) {
-					successCallback(result);
+		/**
+		 * 서버로부터 새로 항목을 내려받아 캐시한다.
+		 * @param {Number} noticeId 내려받을 항목의 ID
+		 * @returns {Promise}
+		 */
+		this.sync = function (noticeId) {
+			return $q(function (resolve, reject) {
+				$restService.getNotice(noticeId)
+					.success(function (data, status, headers, config) {
+						data._id = data.ID + "";
+						$noticeCacheService.put(data);
 
-					$restService.getNotice(noticeId)
-						.success(function (data, status, headers, config) {
-							data._id = data.ID + "";
-							$noticeCacheService.put(data);
+						resolve(data);
+					})
+					.error(function (data, status, headers, config) {
+						reject(data);
+					});
+			});
+		};
 
-							successCallback(data);
-						})
-						.error(function (data, status, headers, config) {
-							errorCallback(data);
-						});
-				})
-				.catch(errorCallback);
+		/**
+		 * 캐시된 목록을 가져온다.
+		 * @returns {Promise}
+		 */
+		this.list = function () {
+			return $q(function (resolve, reject) {
+				$noticeCacheService.list()
+					.then(function (result) {
+						var notices = _.chain(result.rows)
+							.map(function (obj) {
+								return obj.doc;
+							})
+							.sortBy(function (notice) {
+								return notice.ID;
+							})
+							.reverse()
+							.value();
+
+						resolve(notices);
+					})
+					.catch(reject);
+			});
+		};
+
+		/**
+		 * 캐시된 항목을 가져온다.
+		 * @param {Number} noticeId 가져올 항목의 ID
+		 * @returns {Promise}
+		 */
+		this.get = function (noticeId) {
+			return $noticeCacheService.get(noticeId);
 		};
 	});

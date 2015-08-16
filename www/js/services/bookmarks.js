@@ -10,21 +10,35 @@ angular.module('starter.services')
 			});
 		};
 
+		/**
+		 * @param {Number} id
+		 * @param {String} title
+		 * @param {String} excerpt
+		 */
 		this.put = function (id, title, excerpt) {
 			return db.put({
-				"_id": id,
+				"_id": id + "",
 				"type": "document",
 				"title": title,
 				"excerpt": excerpt
 			});
 		};
 
+		/**
+		 * @param {Number} id
+		 * @returns {*}
+		 */
 		this.get = function (id) {
-			return db.get(id);
+			return db.get(id + "");
 		};
 
+		/**
+		 * @param {Number} id
+		 * @param {String} rev
+		 * @returns {*}
+		 */
 		this.remove = function (id, rev) {
-			return db.remove(id, rev);
+			return db.remove(id + "", rev);
 		};
 
 		this.reset = function (notices) {
@@ -37,46 +51,74 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$bookmarkService', function ($bookmarkDb) {
-		this.retrieveAll = function (successCallback, errorCallback) {
-			$bookmarkDb.list()
-				.then(function (result) {
-					var bookmarks = _(result.rows).map(function (obj) {
-						return obj.doc;
+	.service('$bookmarkService', function ($bookmarkDb, $q) {
+		/**
+		 * @returns {Promise}
+		 */
+		this.list = function () {
+			return $q(function (resolve, reject) {
+				$bookmarkDb.list()
+					.then(function (result) {
+						var bookmarks = _(result.rows).map(function (obj) {
+							return obj.doc;
+						});
+
+						resolve(bookmarks);
+					})
+					.catch(function (err) {
+						reject(err)
 					});
-
-					successCallback(bookmarks);
-				})
-				.catch(errorCallback);
+			});
 		};
 
-		this.add = function (docId, title, excerpt, successCallback, errorCallback) {
-			$bookmarkDb.put(docId + "", title, excerpt)
-				.then(function (result) {
-					successCallback(result.id, result.rev);
-				})
-				.catch(errorCallback);
+		/**
+		 * 북마크를 추가한다.
+		 * @param {Number} postId
+		 * @param {String} title
+		 * @param {String} excerpt
+		 * @returns {Promise}
+		 */
+		this.add = function (postId, title, excerpt) {
+			return $q(function (resolve, reject) {
+				$bookmarkDb.put(postId, title, excerpt)
+					.then(function (result) {
+						resolve({
+							"id": result.id,
+							"rev": result.rev
+						});
+					})
+					.catch(reject);
+			});
 		};
 
-		this.remove = function (docId, docRev, successCallback, errorCallback) {
-			$bookmarkDb.remove(docId + "", docRev)
-				.then(function (result) {
-					successCallback();
-				})
-				.catch(errorCallback);
+		/**
+		 * 북마크를 제거한다.
+		 * @param {Number} postId
+		 * @param {String} docRev
+		 * @returns {Promise}
+		 */
+		this.remove = function (postId, docRev) {
+			return $bookmarkDb.remove(postId, docRev)
 		};
 
-		this.exists = function (docId, successCallback, errorCallback) {
-			$bookmarkDb.get(docId + "")
-				.then(function (result) {
-					successCallback(true, result._rev);
-				})
-				.catch(function (err) {
-					if (err.status == 404) {
-						successCallback(false);
-					} else {
-						errorCallback(err)
-					}
-				});
+		/**
+		 * 페이지가 북마크되어있는지 확인한다.
+		 * @param {Number} postId 확인할 페이지의 PostID
+		 * @returns {Promise}
+		 */
+		this.exists = function (postId) {
+			return $q(function (resolve, reject) {
+				$bookmarkDb.get(postId)
+					.then(function (result) {
+						resolve(result._rev);
+					})
+					.catch(function (err) {
+						if (err.status == 404) {
+							resolve(null);
+						} else {
+							reject(err)
+						}
+					});
+			});
 		}
 	});

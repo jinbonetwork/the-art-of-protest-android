@@ -14,9 +14,9 @@ angular.module('starter.services')
 			return db.get(id);
 		};
 
-		this.put = function (obj) {
-			return db.upsert(obj._id, function (doc) {
-				return doc.modified != obj.modified;
+		this.put = function (post) {
+			return db.upsert(post._id, function (doc) {
+				return doc.modified != post.modified;
 			});
 		};
 
@@ -34,61 +34,92 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$postService', function ($restService, $postCacheService) {
-		this.retrieveAll = function (successCallback, errorCallback) {
-			var postOrder = function (post) {
-				return post.menu_order;
-			};
+	.service('$postService', function ($restService, $postCacheService, $q) {
 
-			$postCacheService.list()
-				.then(function (result) {
-					var docs = _.chain(result.rows)
-						.map(function (obj) {
-							return obj.doc;
-						})
-						.sortBy(postOrder)
-						.value();
-
-					successCallback(docs);
-
-					$restService.getPosts()
-						.success(function (data, status, headers, config) {
-							var posts = _.chain(data.posts)
-								.map(function (obj) {
-									//PouchDB ID 추가
-									obj._id = obj.ID + "";
-									return obj;
-								})
-								.sortBy(postOrder)
-								.value();
-
-							$postCacheService.reset(posts);
-
-							successCallback(posts);
-						})
-						.error(function (data, status, headers, config) {
-							errorCallback(data);
-						});
-				});
+		/**
+		 * 게시물의 정렬기준을 반환한다.
+		 * @param post
+		 * @returns {Number}
+		 */
+		var postOrder = function (post) {
+			return post.menu_order;
 		};
 
-		this.retrieve = function (docId, successCallback, errorCallback) {
-			$postCacheService.get(docId)
-				.then(function (result) {
-					successCallback(result);
+		/**
+		 * 서버로부터 새로 목록을 내려받아 캐시한다.
+		 * @returns {Promise}
+		 */
+		this.syncAll = function () {
+			return $q(function (resolve, reject) {
+				$restService.getPosts()
+					.success(function (data, status, headers, config) {
+						var posts = _.chain(data.posts)
+							.map(function (obj) {
+								//PouchDB ID 추가
+								obj._id = obj.ID + "";
+								return obj;
+							})
+							.sortBy(postOrder)
+							.value();
 
-					$restService.getPost(docId)
-						.success(function (data, status, headers, config) {
-							data._id = data.ID + "";
-							$postCacheService.put(data);
+						$postCacheService.reset(posts);
 
-							successCallback(data);
-						})
-						.error(function (data, status, headers, config) {
-							errorCallback(data);
-						});
-				})
-				.catch(errorCallback);
+						resolve(posts);
+					})
+					.error(function (data, status, headers, config) {
+						reject(data);
+					});
+			});
+		};
+
+		/**
+		 * 서버로부터 새로 항목을 내려받아 캐시한다.
+		 * @param {Number} postId 내려받을 항목의 ID
+		 * @returns {Promise}
+		 */
+		this.sync = function (postId) {
+			return $q(function (resolve, reject) {
+				$restService.getPost(postId)
+					.success(function (data, status, headers, config) {
+						data._id = data.ID + "";
+						$postCacheService.put(data);
+
+						resolve(data);
+					})
+					.error(function (data, status, headers, config) {
+						reject(data);
+					});
+			});
+		};
+
+		/**
+		 * 캐시된 목록을 가져온다.
+		 * @returns {Promise}
+		 */
+		this.list = function () {
+			return $q(function (resolve, reject) {
+				$postCacheService.list()
+					.then(function (result) {
+						var docs = _.chain(result.rows)
+							.map(function (obj) {
+								return obj.doc;
+							})
+							.sortBy(postOrder)
+							.value();
+
+						resolve(docs);
+					})
+					.catch(reject);
+			});
+		};
+
+		/**
+		 * 캐시된 항목을 가져온다.
+		 * @param {Number} postId 가져올 항목의 ID
+		 * @returns {Promise}
+		 */
+		this.get = function (postId) {
+			return $postCacheService.get(postId);
 		};
 
 		/**
@@ -98,15 +129,13 @@ angular.module('starter.services')
 		 * @param {number} limit
 		 * @returns {Promise}
 		 */
-		this.query = function (keyword, limit, successCallback, errorCallback) {
+		this.query = function (keyword, limit) {
 			return $postCacheService.query(function (doc) {
 				// TODO workaround. global.keyword 참조
 				var keyword = global["keyword"];
 				if (doc.title.indexOf(keyword) > -1 || doc.content.indexOf(keyword) > -1)
 					emit(doc);
-			}, {include_docs: true, limit: limit})
-				.then(successCallback)
-				.catch(errorCallback);
+			}, {include_docs: true, limit: limit});
 		};
 	});
 

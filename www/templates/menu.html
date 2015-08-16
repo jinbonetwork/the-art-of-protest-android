@@ -29,13 +29,13 @@
 					<i class="icon ion-ios-list-outline"></i>매뉴얼
 				</ion-item>
 				<!-- posts 시작 -->
-				<div ng-repeat="category in categories">
+				<div ng-repeat="category in ::categories">
 					<ion-item class="padding-left" ng-click="toggleGroup(category.ID)" ng-class="{active: isGroupShown(category.ID)}">
-						{{ category.title }} <i class="icon ion-ios-arrow-down" style="padding-left: 10px"></i>
+						{{::category.title}} <i class="icon ion-ios-arrow-down" style="padding-left: 10px"></i>
 					</ion-item>
 					<ion-item ng-repeat="post in category.posts" ng-show="isGroupShown(category.ID)"
 					          menu-close ui-sref-active="menu-active" class="padding-left item-accordion" ui-sref="app.post({postId : post.ID})">
-						{{ post.title }}
+						{{::post.title}}
 					</ion-item>
 				</div>
 				<!-- posts 끝 -->

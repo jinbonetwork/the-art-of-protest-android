@@ -1,12 +1,9 @@
 angular.module('starter.controllers', ['starter.services'])
 
-	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, $categoryService,
+	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, categories,
 									 $ionicSideMenuDelegate, $log) {
 		//TODO localstorage 이용 버전 확인
-
-		$categoryService.retrieveAll(function (categories) {
-			$scope.categories = categories;
-		}, $log.error);
+		$scope.categories = categories;
 
 		/*
 		 * if given group is the selected group, deselect it
@@ -67,75 +64,52 @@ angular.module('starter.controllers', ['starter.services'])
 		};
 	})
 
-	.controller('NoticesCtrl', function ($noticeService, $scope, $log) {
+	.controller('NoticesCtrl', function ($noticeService, $scope, $log, notices) {
+		$scope.notices = notices;
+
 		$scope.refreshItems = function () {
-			$noticeService.retrieveAll(function (notices) {
+			$noticeService.syncAll().then(function (notices) {
 				$scope.notices = notices;
 			}, $log.error);
 
 			$scope.$broadcast('scroll.refreshComplete');
 		};
-
-		$scope.refreshItems();
 	})
 
-	.controller('NoticeCtrl', function ($scope, $stateParams, $noticeService, $log) {
-		$noticeService.retrieve($stateParams.noticeId, function (notice) {
-			$scope.notice = notice
-		}, $log.error);
+	.controller('NoticeCtrl', function ($scope, notice) {
+		$scope.notice = notice;
 	})
 
-	.controller('PostsCtrl', function ($scope, $postService, $log) {
+	.controller('PostsCtrl', function ($scope, $postService, $log, posts) {
+		$scope.posts = posts;
+
 		$scope.refreshItems = function () {
-			$postService.retrieveAll(function (posts) {
+			$postService.syncAll().then(function (posts) {
 				$scope.posts = posts;
 			}, $log.error);
 
 			$scope.$broadcast('scroll.refreshComplete');
 		};
-
-		$scope.refreshItems();
 	})
 
-	.controller('PostCtrl', function ($scope, $stateParams, $postService, $bookmarkService, $cordovaToast,
-									  $log) {
-		var postId = $stateParams.postId;
-
-		//TODO 라우팅 전에 수행되도록 변경
-		$postService.retrieve(postId, function (post) {
-			$scope.post = post;
-			$scope.loaded = true;
-		}, $log.error);
-
-		$bookmarkService.exists(postId, function (result, rev) {
-			$scope.bookmarked = result;
-			$scope.bookmarkRev = rev;
-		}, $log.error);
+	.controller('PostCtrl', function ($scope, $postService, $bookmarkService, $cordovaToast,
+									  post, initBookmarkRev, $log) {
+		$scope.post = post;
+		$scope.bookmarkRev = initBookmarkRev;
 
 		$scope.toggleBookmark = function () {
-			var post = $scope.post;
-
-			if ($scope.bookmarked == true) {
-				$bookmarkService.remove(
-					post.ID,
-					$scope.bookmarkRev,
-					function () {
-						$scope.bookmarked = false;
+			if ($scope.bookmarkRev) {
+				$bookmarkService.remove(post.ID, $scope.bookmarkRev)
+					.then(function () {
 						$scope.bookmarkRev = null;
 						$cordovaToast.showShortTop('북마크가 해제되었습니다.');
-					},
-					$log.error)
+					}, $log.error)
 			} else {
-				$bookmarkService.add(
-					post.ID,
-					post.title,
-					post.excerpt,
-					function (id, rev) {
-						$scope.bookmarked = true;
-						$scope.bookmarkRev = rev;
+				$bookmarkService.add(post.ID, post.title, post.excerpt)
+					.then(function (result) {
+						$scope.bookmarkRev = result.rev;
 						$cordovaToast.showShortTop('북마크가 설정되었습니다.');
-					},
-					$log.error)
+					}, $log.error)
 			}
 		}
 	})
@@ -155,17 +129,18 @@ angular.module('starter.controllers', ['starter.services'])
 					var that = this;
 					// TODO workaround. global.keyword 참조
 					global["keyword"] = expression;
-					$postService.query(expression, 20, function (result) {
-						if (result.rows.length > 0) {
-							that.update(_(result.rows).map(function (row) {
-								return row.doc
-							}));
-						} else {
-							that.update([{"title": "해당되는 문서가 없습니다."}])
-						}
-					}, function () {
-						that.update([{"title": "찾는 중 오류가 발생했습니다."}])
-					});
+					$postService.query(expression, 20)
+						.then(function (result) {
+							if (result.rows.length > 0) {
+								that.update(_(result.rows).map(function (row) {
+									return row.doc
+								}));
+							} else {
+								that.update([{"title": "해당되는 문서가 없습니다."}])
+							}
+						}).catch(function () {
+							that.update([{"title": "찾는 중 오류가 발생했습니다."}])
+						});
 
 					return [{"title": "찾는 중입니다..."}]
 				}
@@ -183,20 +158,17 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.bookmarks = bookmarks;
 
 		$scope.onItemDelete = function (bookmark) {
-			$bookmarkService.remove(
-				bookmark._id,
-				bookmark._rev,
-				function () {
+			$bookmarkService.remove(bookmark._id, bookmark._rev)
+				.then(function () {
 					$cordovaToast.showShortTop('북마크가 해제되었습니다.');
-				},
-				$log.error);
+				}, $log.error);
 
 			$scope.bookmarks.splice($scope.bookmarks.indexOf(bookmark), 1);
 		};
 	})
 
 	.controller('SettingsCtrl', function ($scope, $settingService, $log) {
-		$settingService.allDemo(function (settings) {
+		$settingService.allDemo().then(function (settings) {
 			$scope.settings = settings;
 		}, $log.error);
 	});
