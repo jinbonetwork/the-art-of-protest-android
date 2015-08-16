@@ -108,15 +108,13 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				},
 				resolve: {
 					"bookmarks": function ($bookmarkService, $q) {
-						var deferred = $q.defer();
-
-						$bookmarkService.retrieveAll(function (bookmarks) {
-							deferred.resolve(bookmarks);
-						}, function (err) {
-							deferred.reject(err)
+						return $q(function(resolve, reject){
+							$bookmarkService.retrieveAll(function (bookmarks) {
+								resolve(bookmarks);
+							}, function (err) {
+								reject(err)
+							});
 						});
-
-						return deferred.promise;
 					}
 				}
 			})
