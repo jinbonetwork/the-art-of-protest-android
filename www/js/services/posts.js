@@ -16,7 +16,10 @@ angular.module('starter.services')
 
 		this.put = function (post) {
 			return db.upsert(post._id, function (doc) {
-				return doc.modified != post.modified;
+				if (doc.modified == post.modified)
+					return false;
+
+				return post;
 			});
 		};
 
