@@ -31,7 +31,7 @@ angular.module('starter.services')
 		};
 
 		this.reset = function (notices) {
-			db.destroy()
+			return db.destroy()
 				.then(function () {
 					db = pouchDB(DB_NAME);
 					return db.bulkDocs(notices);
@@ -46,8 +46,10 @@ angular.module('starter.services')
 	 * @name $noticeService
 	 * @param {$restService} $restService
 	 * @param {$noticeCacheService} $noticeCacheService
+	 * @param {$q} $q
 	 */
-	function ($restService, $noticeCacheService) {
+	function ($restService, $noticeCacheService, $q) {
+		var synced = $q.defer();
 
 		/**
 		 * 서버로부터 새로 목록을 내려받아 캐시한다.
@@ -62,9 +64,10 @@ angular.module('starter.services')
 						return obj;
 					});
 
-					$noticeCacheService.reset(posts);
-
-					return posts;
+					return $noticeCacheService.reset(posts);
+				})
+				.then(function () {
+					synced.resolve();
 				});
 		};
 
@@ -89,7 +92,10 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.list = function () {
-			return $noticeCacheService.list()
+			return synced.promise
+				.then(function () {
+					return $noticeCacheService.list()
+				})
 				.then(function (result) {
 					return _.chain(result.rows)
 						.map(function (obj) {
@@ -109,6 +115,9 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.get = function (noticeId) {
-			return $noticeCacheService.get(noticeId);
+			return synced.promise
+				.then(function () {
+					return $noticeCacheService.get(noticeId);
+				});
 		};
 	});

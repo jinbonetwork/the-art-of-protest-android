@@ -18,7 +18,7 @@ angular.module('starter.services')
 		};
 
 		this.reset = function (categories) {
-			db.destroy()
+			return db.destroy()
 				.then(function () {
 					db = pouchDB(DB_NAME);
 					return db.bulkDocs(categories);
@@ -33,8 +33,10 @@ angular.module('starter.services')
 	 * @name $categoryService
 	 * @param {$restService} $restService
 	 * @param {$categoryCacheService} $categoryCacheService
+	 * @param {$q} $q
 	 */
-	function ($restService, $categoryCacheService) {
+	function ($restService, $categoryCacheService, $q) {
+		var synced = $q.defer();
 
 		/**
 		 * 카테고리의 정렬기준을 반환한다.
@@ -77,9 +79,10 @@ angular.module('starter.services')
 						.sortBy(categoryOrder)
 						.value();
 
-					$categoryCacheService.reset(categories);
-
-					return categories;
+					return $categoryCacheService.reset(categories);
+				})
+				.then(function () {
+					synced.resolve();
 				});
 		};
 
@@ -88,7 +91,10 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.list = function () {
-			return $categoryCacheService.list()
+			return synced.promise
+				.then(function () {
+					return $categoryCacheService.list()
+				})
 				.then(function (result) {
 					return _.chain(result.rows)
 						.map(function (obj) {

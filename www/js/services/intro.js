@@ -56,6 +56,8 @@ angular.module('starter.services')
 	 * @param {$imageService} $imageService
 	 */
 	function ($q, $restService, $log, $introCacheService, $imageService) {
+		var synced = $q.defer();
+
 		var parseHtml = function (html) {
 			var parser = new DOMParser();
 			var doc = parser.parseFromString(html, "text/html");
@@ -101,6 +103,9 @@ angular.module('starter.services')
 					});
 
 					return $introCacheService.putAttachment(attachments)
+				})
+				.then(function () {
+					synced.resolve();
 				});
 		};
 
@@ -113,7 +118,10 @@ angular.module('starter.services')
 				'binary': true
 			};
 
-			return $introCacheService.get(options)
+			return synced.promise
+				.then(function () {
+					return $introCacheService.get(options)
+				})
 				.then(function (doc) {
 					$log.debug(doc);
 					var result = parseHtml(doc.html);

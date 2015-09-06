@@ -31,7 +31,7 @@ angular.module('starter.services')
 		};
 
 		this.reset = function (notices) {
-			db.destroy()
+			return db.destroy()
 				.then(function () {
 					db = pouchDB(DB_NAME);
 					return db.bulkDocs(notices);
@@ -50,8 +50,10 @@ angular.module('starter.services')
 	 * @name $postService
 	 * @param {$restService} $restService
 	 * @param {$postCacheService} $postCacheService
+	 * @param {$q} $q
 	 */
-	function ($restService, $postCacheService) {
+	function ($restService, $postCacheService, $q) {
+		var synced = $q.defer();
 
 		/**
 		 * 게시물의 정렬기준을 반환한다.
@@ -79,9 +81,10 @@ angular.module('starter.services')
 						.sortBy(postOrder)
 						.value();
 
-					$postCacheService.reset(posts);
-
-					return posts;
+					return $postCacheService.reset(posts);
+				})
+				.then(function () {
+					synced.resolve();
 				});
 		};
 
@@ -106,7 +109,10 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.list = function () {
-			return $postCacheService.list()
+			return synced.promise
+				.then(function () {
+					return $postCacheService.list();
+				})
 				.then(function (result) {
 					var docs = _.chain(result.rows)
 						.map(function (obj) {
@@ -125,7 +131,10 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.get = function (postId) {
-			return $postCacheService.get(postId);
+			return synced.promise
+				.then(function () {
+					return $postCacheService.get(postId);
+				});
 		};
 
 		/**
