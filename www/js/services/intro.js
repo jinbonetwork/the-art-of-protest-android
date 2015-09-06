@@ -64,7 +64,8 @@ angular.module('starter.services')
 
 					//TODO 불필요한 업데이트 차단
 					return $introCacheService.put(html, lastModified)
-				}).then(function () {
+				})
+				.then(function () {
 					var promises = result.images.map(function (img) {
 						// TODO CORS
 						var url = img.src
@@ -84,7 +85,8 @@ angular.module('starter.services')
 					});
 
 					return $q.all(promises);
-				}).then(function (files) {
+				})
+				.then(function (files) {
 					var attachments = {};
 					files.forEach(function (file) {
 						attachments[file.filename] = {
@@ -94,7 +96,8 @@ angular.module('starter.services')
 					});
 
 					return $introCacheService.putAttachment(attachments)
-				}).then(function () {
+				})
+				.then(function () {
 					return result;
 				});
 
