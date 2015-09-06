@@ -13,8 +13,8 @@ angular.module('starter.services')
 		});
 		var INTRO_DB_ID = "intro";
 
-		this.get = function () {
-			return db.get(INTRO_DB_ID);
+		this.get = function (options) {
+			return db.get(INTRO_DB_ID, options);
 		};
 
 		/**
@@ -92,10 +92,11 @@ angular.module('starter.services')
 						var filename = url.substring(url.lastIndexOf('/') + 1);
 
 						return $q(function (resolve, reject) {
-							blobUtil.imgSrcToBlob(url, 'image/jpeg', {crossOrigin: 'Anonymous'})
+							// 투명 지원을 위해 image/png 필요
+							blobUtil.imgSrcToBlob(url, 'image/png', {crossOrigin: 'Anonymous'})
 								.then(function (blob) {
 									resolve({
-										"content_type": "image/jpeg",
+										"content_type": "image/png",
 										"filename": filename,
 										"data": blob
 									})
@@ -128,9 +129,23 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.get = function () {
-			return $introCacheService.get()
-				.then(function (result) {
-					return parseHtml(result.html);
+			var options = {
+				'attachments': true,
+				'binary': true
+			};
+
+			return $introCacheService.get(options)
+				.then(function (doc) {
+					$log.debug(doc);
+					var result = parseHtml(doc.html);
+					result.images.map(function (img) {
+						var url = img.src;
+						var filename = url.substring(url.lastIndexOf('/') + 1);
+						var blob = doc._attachments[filename].data;
+						img.src = blobUtil.createObjectURL(blob);
+					});
+
+					return result;
 				});
 		};
 	});
