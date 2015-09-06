@@ -1,6 +1,14 @@
 angular.module('starter.services')
 
-	.service('$settingService', function (pouchDB, $log, $q) {
+	.service('$settingService',
+	/**
+	 * @ngdoc service
+	 * @name $settingService
+	 * @param {PouchDB} pouchDB
+	 * @param {$log} $log
+	 * @param {$q} $q
+	 */
+	function (pouchDB, $log, $q) {
 		var DB_NAME = "settings";
 		var db = pouchDB(DB_NAME);
 

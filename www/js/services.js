@@ -17,7 +17,15 @@ angular.module('starter.services', [])
 		}
 	}])
 
-	.service('$restService', function ($http, $q, $log) {
+	.service('$restService',
+	/**
+	 * @ngdoc service
+	 * @name $restService
+	 * @param {$http} $http
+	 * @param {$q} $q
+	 * @param {$log} $log
+	 */
+	function ($http, $q, $log) {
 		var home = "http://theartofprotest.jinbo.net/home.html";
 		var apiRoot = "https://public-api.wordpress.com/rest/v1.1/sites/theartofprotest.jinbo.net";
 

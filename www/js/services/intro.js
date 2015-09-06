@@ -1,6 +1,13 @@
 angular.module('starter.services')
 
-	.service('$introCacheService', function (pouchDB, $log) {
+	.service('$introCacheService',
+	/**
+	 * @ngdoc service
+	 * @name $introCacheService
+	 * @param {PouchDB} pouchDB
+	 * @param {$log} $log
+	 */
+	function (pouchDB, $log) {
 		var db = pouchDB("intro", {
 			auto_compaction: true
 		});
@@ -10,6 +17,10 @@ angular.module('starter.services')
 			return db.get(INTRO_DB_ID);
 		};
 
+		/**
+		 * @param {String} html
+		 * @param {Date} modified
+		 */
 		this.put = function (html, modified) {
 			var intro = {
 				"_id": INTRO_DB_ID,
@@ -34,7 +45,16 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$introService', function ($q, $restService, $log, $introCacheService) {
+	.service('$introService',
+	/**
+	 * @ngdoc service
+	 * @name $introService
+	 * @param {$q} $q
+	 * @param {$restService} $restService
+	 * @param {$log} $log
+	 * @param {$introCacheService} $introCacheService
+	 */
+	function ($q, $restService, $log, $introCacheService) {
 		var parseHtml = function (html) {
 			var parser = new DOMParser();
 			var doc = parser.parseFromString(html, "text/html");
@@ -68,7 +88,7 @@ angular.module('starter.services')
 				.then(function () {
 					var promises = result.images.map(function (img) {
 						// TODO CORS
-						var url = img.src
+						var url = img.src;
 						var filename = url.substring(url.lastIndexOf('/') + 1);
 
 						return $q(function (resolve, reject) {

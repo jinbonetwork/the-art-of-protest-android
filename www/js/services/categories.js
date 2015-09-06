@@ -1,6 +1,13 @@
 angular.module('starter.services')
 
-	.service('$categoryCacheService', function (pouchDB, $log) {
+	.service('$categoryCacheService',
+	/**
+	 * @ngdoc service
+	 * @name $categoryCacheService
+	 * @param {PouchDB} pouchDB
+	 * @param {$log} $log
+	 */
+	function (pouchDB, $log) {
 		var DB_NAME = "categories";
 		var db = pouchDB(DB_NAME);
 
@@ -20,7 +27,15 @@ angular.module('starter.services')
 		}
 	})
 
-	.service('$categoryService', function ($restService, $categoryCacheService, $q) {
+	.service('$categoryService',
+	/**
+	 * @ngdoc service
+	 * @name $categoryService
+	 * @param {$restService} $restService
+	 * @param {$categoryCacheService} $categoryCacheService
+	 * @param {$q} $q
+	 */
+	function ($restService, $categoryCacheService, $q) {
 
 		/**
 		 * 카테고리의 정렬기준을 반환한다.

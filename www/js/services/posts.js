@@ -1,6 +1,13 @@
 angular.module('starter.services')
 
-	.service('$postCacheService', function (pouchDB, $log) {
+	.service('$postCacheService',
+	/**
+	 * @ngdoc service
+	 * @name $postCacheService
+	 * @param {PouchDB} pouchDB
+	 * @param {$log} $log
+	 */
+	function (pouchDB, $log) {
 		var DB_NAME = "posts";
 		var db = pouchDB(DB_NAME);
 
@@ -37,7 +44,15 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$postService', function ($restService, $postCacheService, $q) {
+	.service('$postService',
+	/**
+	 * @ngdoc service
+	 * @name $postService
+	 * @param {$restService} $restService
+	 * @param {$postCacheService} $postCacheService
+	 * @param {$q} $q
+	 */
+	function ($restService, $postCacheService, $q) {
 
 		/**
 		 * 게시물의 정렬기준을 반환한다.
@@ -53,6 +68,7 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.syncAll = function () {
+			//TODO attachments 동기화
 			return $q(function (resolve, reject) {
 				$restService.getPosts()
 					.success(function (data, status, headers, config) {

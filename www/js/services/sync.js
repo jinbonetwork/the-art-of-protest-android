@@ -1,6 +1,17 @@
 angular.module('starter.services')
 
-	.service('$syncService', function ($q, $categoryService, $postService, $noticeService, $introService, $settingService) {
+	.service('$syncService',
+	/**
+	 * @ngdoc service
+	 * @name $syncService
+	 * @param {$q} $q
+	 * @param {$categoryService} $categoryService
+	 * @param {$postService} $postService
+	 * @param {$noticeService} $noticeService
+	 * @param {$introService} $introService
+	 * @param {$settingService} $settingService
+	 */
+	function ($q, $categoryService, $postService, $noticeService, $introService, $settingService) {
 		/**
 		 * @returns {Promise}
 		 */

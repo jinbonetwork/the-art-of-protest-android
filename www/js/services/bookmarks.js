@@ -1,6 +1,13 @@
 angular.module('starter.services')
 
-	.service('$bookmarkDb', function (pouchDB, $log) {
+	.service('$bookmarkDb',
+	/**
+	 * @ngdoc service
+	 * @name $bookmarkDb
+	 * @param {PouchDB} pouchDB
+	 * @param {$log} $log
+	 */
+	function (pouchDB, $log) {
 		var DB_NAME = "bookmarks";
 		var db = pouchDB(DB_NAME);
 
@@ -14,6 +21,7 @@ angular.module('starter.services')
 		 * @param {Number} id
 		 * @param {String} title
 		 * @param {String} excerpt
+		 * @returns {Promise}
 		 */
 		this.put = function (id, title, excerpt) {
 			return db.put({
@@ -26,7 +34,7 @@ angular.module('starter.services')
 
 		/**
 		 * @param {Number} id
-		 * @returns {*}
+		 * @returns {Promise}
 		 */
 		this.get = function (id) {
 			return db.get(id + "");
@@ -35,7 +43,7 @@ angular.module('starter.services')
 		/**
 		 * @param {Number} id
 		 * @param {String} rev
-		 * @returns {*}
+		 * @returns {Promise}
 		 */
 		this.remove = function (id, rev) {
 			return db.remove(id + "", rev);
@@ -51,7 +59,14 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$bookmarkService', function ($bookmarkDb, $q) {
+	.service('$bookmarkService',
+	/**
+	 * @ngdoc service
+	 * @name $bookmarkService
+	 * @param {$bookmarkDb} $bookmarkDb
+	 * @param {$q} $q
+	 */
+	function ($bookmarkDb, $q) {
 		/**
 		 * @returns {Promise}
 		 */

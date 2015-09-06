@@ -1,6 +1,13 @@
 angular.module('starter.services')
 
-	.service('$noticeCacheService', function (pouchDB, $log) {
+	.service('$noticeCacheService',
+	/**
+	 * @ngdoc service
+	 * @name $noticeCacheService
+	 * @param {PouchDB} pouchDB
+	 * @param {$log} $log
+	 */
+	function (pouchDB, $log) {
 		var DB_NAME = "notices";
 		var db = pouchDB(DB_NAME);
 
@@ -33,7 +40,15 @@ angular.module('starter.services')
 		}
 	})
 
-	.service('$noticeService', function ($restService, $noticeCacheService, $q) {
+	.service('$noticeService',
+	/**
+	 * @ngdoc service
+	 * @name $noticeService
+	 * @param {$restService} $restService
+	 * @param {$noticeCacheService} $noticeCacheService
+	 * @param {$q} $q
+	 */
+	function ($restService, $noticeCacheService, $q) {
 
 		/**
 		 * 서버로부터 새로 목록을 내려받아 캐시한다.
