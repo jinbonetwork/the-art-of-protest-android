@@ -110,9 +110,4 @@ angular.module('starter.services', [])
 				url: apiRoot + "/posts/" + postId
 			});
 		};
-	})
-
-	.service('$db', function () {
-		this.documents = new PouchDB('documents');
-		this.bookmarks = new PouchDB('bookmarks');
 	});

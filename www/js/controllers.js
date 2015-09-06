@@ -136,7 +136,7 @@ angular.module('starter.controllers', ['starter.services'])
 					$postService.query(expression, 20)
 						.then(function (result) {
 							if (result.rows.length > 0) {
-								that.update(_(result.rows).map(function (row) {
+								that.update(result.rows.map(function (row) {
 									return row.doc
 								}));
 							} else {

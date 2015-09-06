@@ -74,7 +74,7 @@ angular.module('starter.services')
 			return $q(function (resolve, reject) {
 				$bookmarkDb.list()
 					.then(function (result) {
-						var bookmarks = _(result.rows).map(function (obj) {
+						var bookmarks = result.rows.map(function (obj) {
 							return obj.doc;
 						});
 

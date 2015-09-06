@@ -58,12 +58,11 @@ angular.module('starter.services')
 			return $q(function (resolve, reject) {
 				$restService.getNotices()
 					.success(function (data, status, headers, config) {
-						var posts = _(data.posts)
-							.map(function (obj) {
-								//PouchDB ID 추가
-								obj._id = obj.ID + "";
-								return obj;
-							});
+						var posts = data.posts.map(function (obj) {
+							//PouchDB ID 추가
+							obj._id = obj.ID + "";
+							return obj;
+						});
 
 						$noticeCacheService.reset(posts);
 

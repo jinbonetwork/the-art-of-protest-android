@@ -101,9 +101,6 @@ angular.module('starter.services')
 					});
 
 					return $introCacheService.putAttachment(attachments)
-				})
-				.then(function () {
-					return result;
 				});
 		};
 
