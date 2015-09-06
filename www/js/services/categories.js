@@ -33,9 +33,8 @@ angular.module('starter.services')
 	 * @name $categoryService
 	 * @param {$restService} $restService
 	 * @param {$categoryCacheService} $categoryCacheService
-	 * @param {$q} $q
 	 */
-	function ($restService, $categoryCacheService, $q) {
+	function ($restService, $categoryCacheService) {
 
 		/**
 		 * 카테고리의 정렬기준을 반환한다.
@@ -51,42 +50,37 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.sync = function () {
-			return $q(function (resolve, reject) {
-				$restService.getPostsByCategory()
-					.success(function (data, status, headers, config) {
-						var categories = _.chain(data.posts)
-							.groupBy(function (post) {
-								var title = Object.keys(post.categories)[0];
-								return post.categories[title].ID;
-							})
-							.map(function (posts) {
-								var head = posts[0];
-								var categoryTitle = Object.keys(head.categories)[0];
-								var category = head.categories[categoryTitle];
-								var order = _.chain(posts).map(function (p) {
+			return $restService.getPostsByCategory()
+				.then(function (response) {
+					var categories = _.chain(response.data.posts)
+						.groupBy(function (post) {
+							var title = Object.keys(post.categories)[0];
+							return post.categories[title].ID;
+						})
+						.map(function (posts) {
+							var head = posts[0];
+							var categoryTitle = Object.keys(head.categories)[0];
+							var category = head.categories[categoryTitle];
+							var order = _.chain(posts).map(function (p) {
+								return p.menu_order
+							}).min().value();
+
+							return {
+								"ID": category.ID + "", // PouchDB를 위해 String 처리
+								"title": categoryTitle,
+								"posts": _(posts).sortBy(function (p) {
 									return p.menu_order
-								}).min().value();
+								}),
+								"order": order
+							};
+						})
+						.sortBy(categoryOrder)
+						.value();
 
-								return {
-									"ID": category.ID + "", // PouchDB를 위해 String 처리
-									"title": categoryTitle,
-									"posts": _(posts).sortBy(function (p) {
-										return p.menu_order
-									}),
-									"order": order
-								};
-							})
-							.sortBy(categoryOrder)
-							.value();
+					$categoryCacheService.reset(categories);
 
-						$categoryCacheService.reset(categories);
-
-						resolve(categories);
-					})
-					.error(function (data, status, headers, config) {
-						reject(status);
-					});
-			});
+					return categories;
+				});
 		};
 
 		/**
@@ -94,19 +88,14 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.list = function () {
-			return $q(function (resolve, reject) {
-				$categoryCacheService.list()
-					.then(function (result) {
-						var categories = _.chain(result.rows)
-							.map(function (obj) {
-								return obj.doc;
-							})
-							.sortBy(categoryOrder)
-							.value();
-
-						resolve(categories);
-					})
-					.catch(reject);
-			});
+			return $categoryCacheService.list()
+				.then(function (result) {
+					return _.chain(result.rows)
+						.map(function (obj) {
+							return obj.doc;
+						})
+						.sortBy(categoryOrder)
+						.value();
+				});
 		};
 	});

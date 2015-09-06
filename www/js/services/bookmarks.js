@@ -71,19 +71,12 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.list = function () {
-			return $q(function (resolve, reject) {
-				$bookmarkDb.list()
-					.then(function (result) {
-						var bookmarks = result.rows.map(function (obj) {
-							return obj.doc;
-						});
-
-						resolve(bookmarks);
-					})
-					.catch(function (err) {
-						reject(err)
+			return $bookmarkDb.list()
+				.then(function (result) {
+					return result.rows.map(function (obj) {
+						return obj.doc;
 					});
-			});
+				});
 		};
 
 		/**
@@ -94,16 +87,13 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.add = function (postId, title, excerpt) {
-			return $q(function (resolve, reject) {
-				$bookmarkDb.put(postId, title, excerpt)
-					.then(function (result) {
-						resolve({
-							"id": result.id,
-							"rev": result.rev
-						});
-					})
-					.catch(reject);
-			});
+			return $bookmarkDb.put(postId, title, excerpt)
+				.then(function (result) {
+					return {
+						"id": result.id,
+						"rev": result.rev
+					};
+				});
 		};
 
 		/**

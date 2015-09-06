@@ -50,9 +50,8 @@ angular.module('starter.services')
 	 * @name $postService
 	 * @param {$restService} $restService
 	 * @param {$postCacheService} $postCacheService
-	 * @param {$q} $q
 	 */
-	function ($restService, $postCacheService, $q) {
+	function ($restService, $postCacheService) {
 
 		/**
 		 * 게시물의 정렬기준을 반환한다.
@@ -69,26 +68,21 @@ angular.module('starter.services')
 		 */
 		this.syncAll = function () {
 			//TODO attachments 동기화
-			return $q(function (resolve, reject) {
-				$restService.getPosts()
-					.success(function (data, status, headers, config) {
-						var posts = _.chain(data.posts)
-							.map(function (obj) {
-								//PouchDB ID 추가
-								obj._id = obj.ID + "";
-								return obj;
-							})
-							.sortBy(postOrder)
-							.value();
+			return $restService.getPosts()
+				.then(function (response) {
+					var posts = _.chain(response.data.posts)
+						.map(function (obj) {
+							//PouchDB ID 추가
+							obj._id = obj.ID + "";
+							return obj;
+						})
+						.sortBy(postOrder)
+						.value();
 
-						$postCacheService.reset(posts);
+					$postCacheService.reset(posts);
 
-						resolve(posts);
-					})
-					.error(function (data, status, headers, config) {
-						reject(data);
-					});
-			});
+					return posts;
+				});
 		};
 
 		/**
@@ -97,18 +91,14 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.sync = function (postId) {
-			return $q(function (resolve, reject) {
-				$restService.getPost(postId)
-					.success(function (data, status, headers, config) {
-						data._id = data.ID + "";
-						$postCacheService.put(data);
+			return $restService.getPost(postId)
+				.then(function (response) {
+					var data = response.data;
+					data._id = data.ID + "";
+					$postCacheService.put(data);
 
-						resolve(data);
-					})
-					.error(function (data, status, headers, config) {
-						reject(data);
-					});
-			});
+					return data;
+				});
 		};
 
 		/**
@@ -116,20 +106,17 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.list = function () {
-			return $q(function (resolve, reject) {
-				$postCacheService.list()
-					.then(function (result) {
-						var docs = _.chain(result.rows)
-							.map(function (obj) {
-								return obj.doc;
-							})
-							.sortBy(postOrder)
-							.value();
+			return $postCacheService.list()
+				.then(function (result) {
+					var docs = _.chain(result.rows)
+						.map(function (obj) {
+							return obj.doc;
+						})
+						.sortBy(postOrder)
+						.value();
 
-						resolve(docs);
-					})
-					.catch(reject);
-			});
+					return docs;
+				});
 		};
 
 		/**

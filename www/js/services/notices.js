@@ -46,32 +46,26 @@ angular.module('starter.services')
 	 * @name $noticeService
 	 * @param {$restService} $restService
 	 * @param {$noticeCacheService} $noticeCacheService
-	 * @param {$q} $q
 	 */
-	function ($restService, $noticeCacheService, $q) {
+	function ($restService, $noticeCacheService) {
 
 		/**
 		 * 서버로부터 새로 목록을 내려받아 캐시한다.
 		 * @returns {Promise}
 		 */
 		this.syncAll = function () {
-			return $q(function (resolve, reject) {
-				$restService.getNotices()
-					.success(function (data, status, headers, config) {
-						var posts = data.posts.map(function (obj) {
-							//PouchDB ID 추가
-							obj._id = obj.ID + "";
-							return obj;
-						});
-
-						$noticeCacheService.reset(posts);
-
-						resolve(posts);
-					})
-					.error(function (data, status, headers, config) {
-						reject(data);
+			return $restService.getNotices()
+				.then(function (response) {
+					var posts = response.data.posts.map(function (obj) {
+						//PouchDB ID 추가
+						obj._id = obj.ID + "";
+						return obj;
 					});
-			})
+
+					$noticeCacheService.reset(posts);
+
+					return posts;
+				});
 		};
 
 		/**
@@ -80,18 +74,14 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.sync = function (noticeId) {
-			return $q(function (resolve, reject) {
-				$restService.getNotice(noticeId)
-					.success(function (data, status, headers, config) {
-						data._id = data.ID + "";
-						$noticeCacheService.put(data);
+			return $restService.getNotice(noticeId)
+				.then(function (response) {
+					var data = response.data;
+					data._id = data.ID + "";
+					$noticeCacheService.put(data);
 
-						resolve(data);
-					})
-					.error(function (data, status, headers, config) {
-						reject(data);
-					});
-			});
+					return data;
+				});
 		};
 
 		/**
@@ -99,23 +89,18 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.list = function () {
-			return $q(function (resolve, reject) {
-				$noticeCacheService.list()
-					.then(function (result) {
-						var notices = _.chain(result.rows)
-							.map(function (obj) {
-								return obj.doc;
-							})
-							.sortBy(function (notice) {
-								return notice.ID;
-							})
-							.reverse()
-							.value();
-
-						resolve(notices);
-					})
-					.catch(reject);
-			});
+			return $noticeCacheService.list()
+				.then(function (result) {
+					return _.chain(result.rows)
+						.map(function (obj) {
+							return obj.doc;
+						})
+						.sortBy(function (notice) {
+							return notice.ID;
+						})
+						.reverse()
+						.value();
+				});
 		};
 
 		/**
