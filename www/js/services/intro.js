@@ -53,8 +53,9 @@ angular.module('starter.services')
 	 * @param {$restService} $restService
 	 * @param {$log} $log
 	 * @param {$introCacheService} $introCacheService
+	 * @param {$imageService} $imageService
 	 */
-	function ($q, $restService, $log, $introCacheService) {
+	function ($q, $restService, $log, $introCacheService, $imageService) {
 		var parseHtml = function (html) {
 			var parser = new DOMParser();
 			var doc = parser.parseFromString(html, "text/html");
@@ -76,7 +77,7 @@ angular.module('starter.services')
 		this.sync = function () {
 			var result = null;
 
-			var promise = $restService.getHome()
+			return $restService.getHome()
 				.then(function (data) {
 					var lastModified = new Date(data.headers()['last-modified']);
 					var html = data.data;
@@ -86,24 +87,7 @@ angular.module('starter.services')
 					return $introCacheService.put(html, lastModified)
 				})
 				.then(function () {
-					var promises = result.images.map(function (img) {
-						// TODO CORS
-						var url = img.src;
-						var filename = url.substring(url.lastIndexOf('/') + 1);
-
-						return $q(function (resolve, reject) {
-							// 투명 지원을 위해 image/png 필요
-							blobUtil.imgSrcToBlob(url, 'image/png', {crossOrigin: 'Anonymous'})
-								.then(function (blob) {
-									resolve({
-										"content_type": "image/png",
-										"filename": filename,
-										"data": blob
-									})
-								})
-								.catch(reject);
-						});
-					});
+					var promises = $imageService.imgTagsToBlobs(result.images);
 
 					return $q.all(promises);
 				})
@@ -121,8 +105,6 @@ angular.module('starter.services')
 				.then(function () {
 					return result;
 				});
-
-			return promise;
 		};
 
 		/**
@@ -138,12 +120,7 @@ angular.module('starter.services')
 				.then(function (doc) {
 					$log.debug(doc);
 					var result = parseHtml(doc.html);
-					result.images.map(function (img) {
-						var url = img.src;
-						var filename = url.substring(url.lastIndexOf('/') + 1);
-						var blob = doc._attachments[filename].data;
-						img.src = blobUtil.createObjectURL(blob);
-					});
+					$imageService.blobsToImgTags(result.images, doc._attachments);
 
 					return result;
 				});
