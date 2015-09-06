@@ -1,4 +1,10 @@
 {
   "name": "the-art-of-protest",
-  "app_id": ""
+  "app_id": "",
+  "proxies": [
+    {
+      "path": "/home",
+      "proxyUrl": "http://theartofprotest.jinbo.net/"
+    }
+  ]
 }

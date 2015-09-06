@@ -17,8 +17,20 @@ angular.module('starter.services', [])
 		}
 	}])
 
-	.service('$restService', function ($http, $log) {
+	.service('$restService', function ($http, $q, $log) {
+		var home = "http://theartofprotest.jinbo.net/home.html";
 		var apiRoot = "https://public-api.wordpress.com/rest/v1.1/sites/theartofprotest.jinbo.net";
+
+		/**
+		 * 첫 화면의 컨텐츠를 가져온다.
+		 * @returns {Promise}
+		 */
+		this.getHome = function () {
+			return $http({
+				method: 'GET',
+				url: home
+			});
+		};
 
 		/**
 		 * 카테고리 목록과 각 카테고리에 속한 문서 목록을 함께 가져온다.

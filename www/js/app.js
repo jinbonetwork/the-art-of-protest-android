@@ -1,10 +1,19 @@
 angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'uiRouterStyles', 'starter.controllers'])
 
-	.run(function ($ionicPlatform, $ionicBackdrop, $syncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope) {
+	.run(function ($ionicPlatform, $ionicModal, $ionicBackdrop, $syncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope) {
 		// 라우팅 오류 기록
 		$rootScope.$on('$stateChangeError', $log.error);
 
 		$ionicPlatform.ready(function () {
+			var modalInstance = null;
+
+			$ionicModal.fromTemplateUrl('loading.html', {
+				animation: 'slide-in-up'
+			}).then(function (modal) {
+				modalInstance = modal;
+				modalInstance.show();
+			});
+
 			//동기화 시작
 			$log.info("동기화를 시작합니다.");
 			$ionicBackdrop.retain();
@@ -12,6 +21,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				.then(function (result) {
 					$log.info("동기화에 성공했습니다.");
 					$ionicBackdrop.release();
+					modalInstance.hide();
 				})
 				.catch(function (err) {
 					$log.error("동기화에 실패했습니다.");
@@ -62,7 +72,17 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				url: '/home',
 				views: {
 					'menuContent': {
-						templateUrl: 'templates/home.html'
+						templateUrl: 'templates/home.html',
+						controller: 'HomeCtrl'
+					}
+				},
+				data: {
+					// TODO 다운로드로 수정
+					css: 'css/home.css'
+				},
+				resolve: {
+					'contents': function ($introService) {
+						return $introService.get();
 					}
 				}
 			})

@@ -1,9 +1,14 @@
 angular.module('starter.services')
 
-	.service('$syncService', function ($q, $categoryService, $postService, $noticeService, $settingService) {
+	.service('$syncService', function ($q, $categoryService, $postService, $noticeService, $introService, $settingService) {
+		/**
+		 * @returns {Promise}
+		 */
 		this.sync = function () {
 			return $q.all([
 				// TODO 버전 확인
+				// 홈 업데이트
+				$introService.sync(),
 				// 카테고리 업데이트
 				$categoryService.sync(),
 				// 글 업데이트

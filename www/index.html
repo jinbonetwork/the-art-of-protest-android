@@ -21,6 +21,7 @@
 
 	<!-- your app's js -->
 	<script src="lib/underscore/underscore.js"></script>
+	<script src="lib/blob-util/dist/blob-util.js"></script>
 	<script src="lib/pouchdb/dist/pouchdb.js"></script>
 	<script src="lib/pouchdb-upsert/dist/pouchdb.upsert.js"></script>
 	<script src="lib/angular-pouchdb/angular-pouchdb.js"></script>
@@ -30,6 +31,7 @@
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script>
 	<script src="js/services/categories.js"></script>
+	<script src="js/services/intro.js"></script>
 	<script src="js/services/notices.js"></script>
 	<script src="js/services/posts.js"></script>
 	<script src="js/services/bookmarks.js"></script>
@@ -40,5 +42,15 @@
 
 <body>
 <ion-nav-view></ion-nav-view>
+<script id="loading.html" type="text/ng-template">
+	<ion-modal-view>
+		<ion-header-bar>
+			<h1 class="title">집회시위 제대로</h1>
+		</ion-header-bar>
+		<ion-content>
+			업데이트를 확인하는 중입니다.
+		</ion-content>
+	</ion-modal-view>
+</script>
 </body>
 </html>

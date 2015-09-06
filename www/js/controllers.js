@@ -64,6 +64,10 @@ angular.module('starter.controllers', ['starter.services'])
 		};
 	})
 
+	.controller('HomeCtrl', function($scope, contents, $log){
+		$scope.contents = contents.style.outerHTML + contents.body.innerHTML;
+	})
+
 	.controller('NoticesCtrl', function ($noticeService, $scope, $log, notices) {
 		$scope.notices = notices;
 
