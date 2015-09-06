@@ -52,7 +52,8 @@ angular.module('starter.services', [])
 					'type': 'page',
 					'category': 'manual',
 					'status': 'publish',
-					'fields': 'ID,title,modified,categories,menu_order'
+					'fields': 'ID,title,modified,categories,menu_order',
+					'number': 100
 				}
 			});
 		};
@@ -94,7 +95,8 @@ angular.module('starter.services', [])
 				params: {
 					'type': 'page',
 					'category': 'manual',
-					'status': 'publish'
+					'status': 'publish',
+					'number': 100
 				}
 			})
 		};
