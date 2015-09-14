@@ -33,7 +33,7 @@ angular.module('starter.constants', [])
 	 */
 	function (ProdConfiguration, DevConfiguration) {
 		// gulp 상에서 조정
-		var MODE = 'DEV';
+		var MODE = 'PROD';
 		var config = MODE == 'DEV' ? DevConfiguration : ProdConfiguration;
 
 		this.home = config.home;
