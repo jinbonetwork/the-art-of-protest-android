@@ -81,7 +81,11 @@ angular.module('starter.services')
 
 			return $restService.getHome()
 				.then(function (data) {
-					var lastModified = new Date(data.headers()['last-modified']);
+					var header = data.headers()['last-modified'];
+					if(_.isUndefined(header)){
+						header = data.headers()['date'];
+					}
+					var lastModified = new Date(header);
 					var html = data.data;
 					result = parseHtml(html);
 
