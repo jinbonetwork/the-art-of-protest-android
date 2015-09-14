@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('starter.services', ['starter.constants'])
 
 	.factory('$localStorage', ['$window', function ($window) {
 		return {
@@ -24,10 +24,11 @@ angular.module('starter.services', [])
 	 * @param {$http} $http
 	 * @param {$q} $q
 	 * @param {$log} $log
+	 * @param {ApiEndpoint} ApiEndpoint
 	 */
-	function ($http, $q, $log) {
-		var home = "http://theartofprotest.jinbo.net/home.html";
-		var apiRoot = "https://public-api.wordpress.com/rest/v1.1/sites/theartofprotest.jinbo.net";
+	function ($http, $q, $log, ApiEndpoint) {
+		var home = ApiEndpoint.home;
+		var apiRoot = ApiEndpoint.api;
 
 		/**
 		 * 첫 화면의 컨텐츠를 가져온다.

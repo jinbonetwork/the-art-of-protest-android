@@ -5,8 +5,9 @@ angular.module('starter.services')
 	 * @ngdoc service
 	 * @name $imageService
 	 * @param {$q} $q
+	 * @param {ApiEndpoint} ApiEndpoint
 	 */
-	function ($q) {
+	function ($q, ApiEndpoint) {
 		var generateFileId = function (url) {
 			// TODO 도메인/경로가 다를 경우 중복 파일명 가능성
 			return url.substring(url.lastIndexOf('/') + 1);
@@ -18,8 +19,7 @@ angular.module('starter.services')
 		 */
 		this.imgTagsToBlobs = function (imgTags) {
 			return imgTags.map(function (img) {
-				// TODO 로컬 개발시 CORS 문제
-				var url = img.src;
+				var url = ApiEndpoint.filter(img.src);
 				var filename = generateFileId(url);
 
 				return $q(function (resolve, reject) {

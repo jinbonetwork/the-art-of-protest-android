@@ -4,10 +4,11 @@
   "description": "the-art-of-protest: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
-    "gulp-sass": "^1.3.3",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
-    "gulp-rename": "^1.2.0"
+    "gulp-rename": "^1.2.0",
+    "gulp-sass": "^1.3.3",
+    "replace": "^0.3.0"
   },
   "devDependencies": {
     "bower": "^1.3.3",

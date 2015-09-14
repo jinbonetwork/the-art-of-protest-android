@@ -5,11 +5,14 @@ var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
+var replace = require('replace');
 var sh = require('shelljs');
 
 var paths = {
   sass: ['./scss/**/*.scss']
 };
+
+var replaceFiles = ['./www/js/constants.js'];
 
 gulp.task('default', ['sass']);
 
@@ -49,4 +52,24 @@ gulp.task('git-check', function(done) {
     process.exit(1);
   }
   done();
+});
+
+gulp.task('add-proxy', function() {
+  return replace({
+    regex: "MODE = 'PROD'",
+    replacement: "MODE = 'DEV'",
+    paths: replaceFiles,
+    recursive: false,
+    silent: false
+  });
+});
+
+gulp.task('remove-proxy', function() {
+  return replace({
+    regex: "MODE = 'DEV'",
+    replacement: "MODE = 'PROD'",
+    paths: replaceFiles,
+    recursive: false,
+    silent: false
+  });
 });
