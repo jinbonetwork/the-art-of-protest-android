@@ -7,12 +7,22 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 		$ionicPlatform.ready(function () {
 			var modalInstance = null;
 
-			$ionicModal.fromTemplateUrl('loading.html', {
-				animation: 'slide-in-up'
-			}).then(function (modal) {
-				modalInstance = modal;
-				modalInstance.show();
-			});
+			// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+			// for form inputs)
+			if (window.cordova && window.cordova.plugins.Keyboard) {
+				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+				cordova.plugins.Keyboard.disableScroll(true);
+
+				$cordovaToast.showLongBottom('버전을 확인하고 있습니다.');
+			} else {
+				// 개발자 화면을 위한 로딩
+				$ionicModal.fromTemplateUrl('loading.html', {
+					animation: 'slide-in-up'
+				}).then(function (modal) {
+					modalInstance = modal;
+					modalInstance.show();
+				});
+			}
 
 			//동기화 시작
 			$log.info("동기화를 시작합니다.");
@@ -21,31 +31,20 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				.then(function (result) {
 					$log.info("동기화에 성공했습니다.");
 					$ionicBackdrop.release();
-					modalInstance.hide();
+
+					try {
+						$cordovaSplashscreen.hide();
+					} catch (err) {
+						$log.error(err);
+					}
+
+					if (modalInstance != null) modalInstance.hide();
 				})
 				.catch(function (err) {
 					$log.error("동기화에 실패했습니다.");
 				});
 			//동기화 끝
 
-			// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-			// for form inputs)
-			if (window.cordova && window.cordova.plugins.Keyboard) {
-				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-				cordova.plugins.Keyboard.disableScroll(true);
-
-				// TODO Modal로 변경
-				$cordovaToast.showLongBottom('버전을 확인하고 있습니다.')
-					.then(function (success) {
-						setTimeout(function () {
-							$cordovaSplashscreen.hide();
-						}, 5000);
-						// success
-					}, function (error) {
-						// error
-					});
-
-			}
 			if (window.StatusBar) {
 				// org.apache.cordova.statusbar required
 				StatusBar.styleDefault();
