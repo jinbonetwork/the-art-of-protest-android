@@ -87,6 +87,13 @@ angular.module('starter.services')
 		};
 
 		/**
+		 * 동기화가 필요없을 때 락을 해제한다.
+		 */
+		this.release = function () {
+			synced.resolve();
+		};
+
+		/**
 		 * 캐시된 목록을 가져온다.
 		 * @returns {Promise}
 		 */

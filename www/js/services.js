@@ -1,6 +1,12 @@
 angular.module('starter.services', ['starter.constants'])
 
-	.factory('$localStorage', ['$window', function ($window) {
+	.factory('$localStorage',
+	/**
+	 * @ngdoc factory
+	 * @name $localStorage
+	 * @param {$window} $window
+	 */
+	function ($window) {
 		return {
 			set: function (key, value) {
 				$window.localStorage[key] = value;
@@ -15,7 +21,7 @@ angular.module('starter.services', ['starter.constants'])
 				return JSON.parse($window.localStorage[key] || '{}');
 			}
 		}
-	}])
+	})
 
 	.service('$restService',
 	/**
@@ -38,6 +44,19 @@ angular.module('starter.services', ['starter.constants'])
 			return $http({
 				method: 'GET',
 				url: home
+			});
+		};
+
+		this.getPostVersion = function () {
+			return $http({
+				method: 'GET',
+				url: apiRoot + "/posts/",
+				params: {
+					'order_by': 'modified',
+					'status': 'publish',
+					'number': 1,
+					'fields': 'modified'
+				}
 			});
 		};
 

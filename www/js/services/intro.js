@@ -82,7 +82,7 @@ angular.module('starter.services')
 			return $restService.getHome()
 				.then(function (data) {
 					var header = data.headers()['last-modified'];
-					if(_.isUndefined(header)){
+					if (_.isUndefined(header)) {
 						header = data.headers()['date'];
 					}
 					var lastModified = new Date(header);
@@ -114,6 +114,13 @@ angular.module('starter.services')
 				.then(function () {
 					synced.resolve();
 				});
+		};
+
+		/**
+		 * 동기화가 필요없을 때 락을 해제한다.
+		 */
+		this.release = function () {
+			synced.resolve();
 		};
 
 		/**
