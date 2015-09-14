@@ -19,8 +19,8 @@
 		</ion-header-bar>
 		<ion-content>
 			<ion-list>
-				<ion-item menu-close ui-sref-active="menu-active" class="item item-icon-left"
-				          ng-if="notice" ui-sref="app.notice({'noticeId':notice.ID})" id="menu-notice">
+				<ion-item menu-close class="item item-icon-left"
+				          ng-if="notice" ng-click="showNotice()" id="menu-notice">
 					<i class="icon ion-ios-bell"></i>공지 <span>{{::notice.title}}</span>
 				</ion-item>
 				<ion-item menu-close ui-sref-active="menu-active" class="item-icon-left" ui-sref="app.home">

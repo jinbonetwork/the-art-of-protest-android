@@ -10,12 +10,12 @@ ion-content {
 	height: 50px !important;
 }
 
-#menu-notice .item-content {
+#menu-notice {
 	background-color: #ff9d4d;
 	color: white;
 }
 
-#menu-notice .item-content span {
+#menu-notice span {
 	font-size: 0.8em;
 }
 

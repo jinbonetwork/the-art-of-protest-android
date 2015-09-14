@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['starter.services'])
 
-	.controller('AppCtrl', function ($scope, categories, notice, $ionicSideMenuDelegate) {
+	.controller('AppCtrl', function ($scope, categories, notice, $ionicSideMenuDelegate, $ionicModal) {
 		$scope.categories = categories;
 		$scope.notice = notice;
 
@@ -29,6 +29,20 @@ angular.module('starter.controllers', ['starter.services'])
 
 		$scope.toggleLeftSideMenu = function () {
 			$ionicSideMenuDelegate.toggleLeft();
+		};
+
+		$ionicModal.fromTemplateUrl('templates/notice_modal.html', {
+			scope: $scope
+		}).then(function (modal) {
+			$scope.modal = modal;
+		});
+
+		$scope.closeNotice = function () {
+			$scope.modal.hide();
+		};
+
+		$scope.showNotice = function () {
+			$scope.modal.show();
 		};
 	})
 

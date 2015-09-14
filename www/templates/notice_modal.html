@@ -1,0 +1,14 @@
+<ion-modal-view>
+	<ion-header-bar>
+		<h1 class="title">공지</h1>
+
+		<div class="buttons">
+			<button class="button button-clear" ng-click="closeNotice()">닫기</button>
+		</div>
+	</ion-header-bar>
+	<ion-content id="notice-content">
+		<h1>{{::notice.title}}</h1>
+
+		<div ng-bind-html="::notice.content"></div>
+	</ion-content>
+</ion-modal-view>
