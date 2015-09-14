@@ -86,7 +86,10 @@ angular.module('starter.services')
 						header = data.headers()['date'];
 					}
 					var lastModified = new Date(header);
-					var html = data.data;
+					var raw = data.data;
+
+					// 커스텀 스키마를 이용한 내부 링크 처리
+					var html = raw.replace(/linkto:/g, "#/app/posts/");
 					result = parseHtml(html);
 
 					//TODO 불필요한 업데이트 차단
