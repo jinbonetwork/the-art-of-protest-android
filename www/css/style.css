@@ -1,5 +1,48 @@
 /* Empty. Add your own CSS if you like */
 
+ion-content {
+	padding-top: 24px;
+}
+
+.title.title-center.header-item {
+	font-size: 18px;
+	font-weight: bold;
+	height: 50px !important;
+}
+
+#about p {
+	padding-left: 24px;
+	padding-right: 24px;
+}
+
+#about table.table {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#about table.table th {
+	width: 50%;
+	font-weight: bold;
+	text-align: right;
+	padding: 10px;
+}
+
+#about table.table td {
+	width: 50%;
+	text-align: left;
+}
+
+#about table.table.about {
+	margin-top: 24px;
+	margin-bottom: 40px;
+}
+
+#about table.table.update {
+	background-color: #ff7200;
+	color: white;
+}
+
 /*TODO 기본 포함된 대응 아이템 찾아 변경 */
 button.bookmark {
 	color: #FF7200 !important;
@@ -21,9 +64,11 @@ button.bookmark {
 .list .item.item-accordion {
 	transition: 0.09s all linear;
 }
+
 .list .item.item-accordion.ng-hide {
 	line-height: 0;
 }
+
 .list .item.item-accordion.ng-hide-add,
 .list .item.item-accordion.ng-hide-remove {
 	display: block !important;
