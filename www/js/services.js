@@ -116,7 +116,7 @@ angular.module('starter.services', ['starter.constants'])
 					'type': 'page',
 					'category': 'manual',
 					'status': 'publish',
-					'fields': 'ID,URL,attachment_count,attachments,content,date,excerpt,featured_image,menu_order,modified,tags,title',
+					'fields': 'ID,URL,attachment_count,attachments,content,date,excerpt,featured_image,menu_order,modified,tags,title,categories',
 					'number': 100
 				}
 			})

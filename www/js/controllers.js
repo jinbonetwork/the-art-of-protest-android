@@ -84,6 +84,7 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.postDate = _.isUndefined(post.modified) ? post.date : post.modified;
 		$scope.postContent = $sce.trustAsHtml(post.content);
 		$scope.bookmarkRev = initBookmarkRev;
+		$scope.categoryTitle = Object.keys(post.categories)[0];
 
 		$scope.toggleBookmark = function () {
 			if ($scope.bookmarkRev) {
