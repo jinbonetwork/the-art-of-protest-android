@@ -15,15 +15,16 @@ angular.module('starter.services')
 	 * @param {$settingService} $settingService
 	 */
 	function ($q, $log, $localStorage, $restService, $categoryService, $postService, $noticeService, $introService, $settingService) {
+		var HOME_KEY = "HOME_VERSION";
+		var POST_KEY = "POST_VERSION";
+
 		var checkUpdate = function () {
 			var deferred = $q.defer();
 
-			// TODO 홈 화면의 버전 확인
-			var HOME_KEY = "HOME_VERSION";
-			var POST_KEY = "POST_VERSION";
 			var homeVersion = $localStorage.get(HOME_KEY);
 			var postVersion = $localStorage.get(POST_KEY);
 
+			// TODO 홈 화면의 버전 확인
 			$restService.getPostVersion()
 				.then(function (response) {
 					var currPostVersion = response.data.posts[0].modified;
@@ -42,6 +43,10 @@ angular.module('starter.services')
 				});
 
 			return deferred.promise;
+		};
+
+		this.getLastUpdate = function () {
+			return new Date($localStorage.get(POST_KEY));
 		};
 
 		/**

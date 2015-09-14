@@ -176,4 +176,8 @@ angular.module('starter.controllers', ['starter.services'])
 		$settingService.allDemo().then(function (settings) {
 			$scope.settings = settings;
 		}, $log.error);
+	})
+
+	.controller('AboutCtrl', function ($scope, $syncService) {
+		$scope.lastUpdate = $syncService.getLastUpdate();
 	});

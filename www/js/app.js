@@ -198,7 +198,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				url: '/about',
 				views: {
 					'menuContent': {
-						templateUrl: 'templates/about.html'
+						templateUrl: 'templates/about.html',
+						controller: 'AboutCtrl'
 					}
 				}
 			});
