@@ -1,9 +1,5 @@
 @charset "utf-8";
 
-body {
-	margin: 0;
-	padding: 0;
-}
 .home-wrapper {
 	margin: 0 auto;
 	max-width: 1024px;
