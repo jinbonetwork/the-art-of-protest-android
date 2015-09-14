@@ -1,6 +1,9 @@
 angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'starter.controllers'])
 
-	.run(function ($ionicPlatform, $ionicModal, $ionicBackdrop, $syncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope) {
+	.run(function ($ionicPlatform, $ionicModal, $ionicBackdrop, $syncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope, $ionicConfig) {
+		// 안드로이드에서 헤더 바 가운데 정렬을 강제
+		$ionicConfig.navBar.alignTitle('center');
+
 		// 라우팅 오류 기록
 		$rootScope.$on('$stateChangeError', $log.error);
 
