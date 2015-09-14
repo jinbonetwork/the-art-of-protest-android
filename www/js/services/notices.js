@@ -117,6 +117,27 @@ angular.module('starter.services')
 		};
 
 		/**
+		 * 캐시된 항목 중 현재 보여져야 하는 항목을 가져온다.
+		 */
+		this.getAvailable = function () {
+			return synced.promise
+				.then(function () {
+					return $noticeCacheService.list()
+				})
+				.then(function (result) {
+					return _.chain(result.rows)
+						.map(function (obj) {
+							return obj.doc;
+						})
+						.sortBy(function (notice) {
+							return notice.ID;
+						})
+						.last()
+						.value();
+				});
+		};
+
+		/**
 		 * 캐시된 항목을 가져온다.
 		 * @param {Number} noticeId 가져올 항목의 ID
 		 * @returns {Promise}

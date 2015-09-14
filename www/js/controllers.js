@@ -1,8 +1,8 @@
 angular.module('starter.controllers', ['starter.services'])
 
-	.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $http, $localStorage, categories,
-									 $ionicSideMenuDelegate, $log) {
+	.controller('AppCtrl', function ($scope, categories, notice, $ionicSideMenuDelegate) {
 		$scope.categories = categories;
+		$scope.notice = notice;
 
 		/*
 		 * if given group is the selected group, deselect it

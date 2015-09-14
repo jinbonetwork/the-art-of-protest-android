@@ -64,6 +64,9 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				resolve: {
 					'categories': function ($categoryService) {
 						return $categoryService.list();
+					},
+					"notice": function ($noticeService) {
+						return $noticeService.getAvailable();
 					}
 				}
 			})
