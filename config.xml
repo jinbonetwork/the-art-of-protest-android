@@ -9,6 +9,8 @@
 	</author>
 	<content src="index.html"/>
 	<access origin="*"/>
+	<access origin="http://*" launch-external="yes" />
+	<access origin="https://*" launch-external="yes" />
 	<preference name="auto-hide-splash-screen" value="false" />
 	<preference name="orientation" value="portrait" />
 	<preference name="webviewbounce" value="false"/>
