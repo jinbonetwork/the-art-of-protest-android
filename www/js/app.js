@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'uiRouterStyles', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'starter.controllers'])
 
 	.run(function ($ionicPlatform, $ionicModal, $ionicBackdrop, $syncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope) {
 		// 라우팅 오류 기록
@@ -76,10 +76,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 						controller: 'HomeCtrl'
 					}
 				},
-				data: {
-					// TODO 다운로드로 수정
-					css: 'css/home.css'
-				},
 				resolve: {
 					'contents': function ($introService) {
 						return $introService.get();
@@ -152,9 +148,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 						templateUrl: 'templates/post.html',
 						controller: 'PostCtrl'
 					}
-				},
-				data: {
-					css: 'css/post.css'
 				},
 				resolve: {
 					"postId": function ($stateParams) {
