@@ -44,7 +44,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					if (modalInstance != null) modalInstance.hide();
 				})
 				.catch(function (err) {
-					$log.error("동기화에 실패했습니다.");
+					$log.error("동기화에 실패했습니다.", err);
 				});
 			//동기화 끝
 
