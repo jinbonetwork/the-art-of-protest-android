@@ -81,6 +81,7 @@ angular.module('starter.controllers', ['starter.services'])
 	.controller('PostCtrl', function ($scope, $postService, $bookmarkService, $cordovaToast,
 									  post, initBookmarkRev, $log, $sce) {
 		$scope.postTitle = post.title;
+		$scope.postDate = _.isUndefined(post.modified) ? post.date : post.modified;
 		$scope.postContent = $sce.trustAsHtml(post.content);
 		$scope.bookmarkRev = initBookmarkRev;
 

@@ -23,6 +23,17 @@ ion-content {
 	padding: 24px;
 }
 
+#post-header {
+	border: 9px white solid;
+	padding: 15px;
+	width: 100%;
+	background-color: #f7f7f7;
+}
+
+#post-header .update{
+	font-size: 0.7em;
+}
+
 #about p {
 	padding-left: 24px;
 	padding-right: 24px;
