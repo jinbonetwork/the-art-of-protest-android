@@ -114,14 +114,12 @@ angular.module('starter.services')
 					return $postCacheService.list();
 				})
 				.then(function (result) {
-					var docs = _.chain(result.rows)
+					return _.chain(result.rows)
 						.map(function (obj) {
 							return obj.doc;
 						})
 						.sortBy(postOrder)
 						.value();
-
-					return docs;
 				});
 		};
 
