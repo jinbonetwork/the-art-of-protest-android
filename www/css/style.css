@@ -10,6 +10,15 @@ ion-content {
 	height: 50px !important;
 }
 
+#menu-notice .item-content {
+	background-color: #ff9d4d;
+	color: white;
+}
+
+#notice-content {
+	padding: 24px;
+}
+
 #about p {
 	padding-left: 24px;
 	padding-right: 24px;
