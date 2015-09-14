@@ -64,8 +64,8 @@ angular.module('starter.controllers', ['starter.services'])
 		};
 	})
 
-	.controller('HomeCtrl', function($scope, contents, $log){
-		$scope.contents = contents.style.outerHTML + contents.body.innerHTML;
+	.controller('HomeCtrl', function($scope, contents, $sce){
+		$scope.contents = $sce.trustAsHtml(contents.style.outerHTML + contents.body.innerHTML);
 	})
 
 	.controller('NoticesCtrl', function ($noticeService, $scope, $log, notices) {
@@ -97,8 +97,9 @@ angular.module('starter.controllers', ['starter.services'])
 	})
 
 	.controller('PostCtrl', function ($scope, $postService, $bookmarkService, $cordovaToast,
-									  post, initBookmarkRev, $log) {
-		$scope.post = post;
+									  post, initBookmarkRev, $log, $sce) {
+		$scope.postTitle = post.title;
+		$scope.postContent = $sce.trustAsHtml(post.content);
 		$scope.bookmarkRev = initBookmarkRev;
 
 		$scope.toggleBookmark = function () {
