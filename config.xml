@@ -8,7 +8,8 @@
 		진보네트워크센터
 	</author>
   <content src="index.html"/>
-  <access origin="*"/>
+  <access origin="http://theartofprotest.jinbo.net"/>
+  <access origin="https://public-api.wordpress.com"/>
   <access origin="http://*" launch-external="yes"/>
   <access origin="https://*" launch-external="yes"/>
   <preference name="orientation" value="portrait"/>
