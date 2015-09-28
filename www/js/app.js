@@ -1,6 +1,6 @@
 angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'starter.controllers'])
 
-	.run(function ($ionicPlatform, $ionicModal, $ionicBackdrop, $syncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope, $ionicConfig) {
+	.run(function ($ionicPlatform, $ionicModal, $ionicBackdrop, SyncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope, $ionicConfig) {
 		// 안드로이드에서 헤더 바 가운데 정렬을 강제
 		$ionicConfig.navBar.alignTitle('center');
 
@@ -30,7 +30,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 			//동기화 시작
 			$log.info("동기화를 시작합니다.");
 			$ionicBackdrop.retain();
-			$syncService.sync()
+			SyncService.sync()
 				.then(function (result) {
 					$log.info("동기화에 성공했습니다.");
 					$ionicBackdrop.release();
@@ -64,11 +64,11 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				templateUrl: 'templates/menu.html',
 				controller: 'AppCtrl',
 				resolve: {
-					'categories': function ($categoryService) {
-						return $categoryService.list();
+					'categories': function (CategoryService) {
+						return CategoryService.list();
 					},
-					"notice": function ($noticeService) {
-						return $noticeService.getAvailable();
+					"notice": function (NoticeService) {
+						return NoticeService.getAvailable();
 					}
 				}
 			})
@@ -82,8 +82,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				},
 				resolve: {
-					'contents': function ($introService) {
-						return $introService.get();
+					'contents': function (IntroService) {
+						return IntroService.get();
 					}
 				}
 			})
@@ -107,8 +107,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				},
 				resolve: {
-					"notices": function ($noticeService) {
-						return $noticeService.list();
+					"notices": function (NoticeService) {
+						return NoticeService.list();
 					}
 				}
 			})
@@ -125,8 +125,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					"noticeId": function ($stateParams) {
 						return $stateParams.noticeId;
 					},
-					"notice": function ($noticeService, noticeId) {
-						return $noticeService.get(noticeId);
+					"notice": function (NoticeService, noticeId) {
+						return NoticeService.get(noticeId);
 					}
 				}
 			})
@@ -140,8 +140,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				},
 				resolve: {
-					"posts": function ($postService) {
-						return $postService.list();
+					"posts": function (PostService) {
+						return PostService.list();
 					}
 				}
 			})
@@ -158,11 +158,11 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					"postId": function ($stateParams) {
 						return $stateParams.postId;
 					},
-					"post": function (postId, $postService) {
-						return $postService.get(postId);
+					"post": function (postId, PostService) {
+						return PostService.get(postId);
 					},
-					"initBookmarkRev": function (postId, $bookmarkService) {
-						return $bookmarkService.exists(postId);
+					"initBookmarkRev": function (postId, BookmarkService) {
+						return BookmarkService.exists(postId);
 					}
 				}
 			})
@@ -176,8 +176,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				},
 				resolve: {
-					"bookmarks": function ($bookmarkService) {
-						return $bookmarkService.list();
+					"bookmarks": function (BookmarkService) {
+						return BookmarkService.list();
 					}
 				}
 			})

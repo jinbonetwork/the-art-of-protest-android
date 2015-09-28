@@ -50,11 +50,11 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.contents = $sce.trustAsHtml(contents.style.outerHTML + contents.body.innerHTML);
 	})
 
-	.controller('NoticesCtrl', function ($noticeService, $scope, $log, notices) {
+	.controller('NoticesCtrl', function (NoticeService, $scope, $log, notices) {
 		$scope.notices = notices;
 
 		$scope.refreshItems = function () {
-			$noticeService.syncAll().then(function (notices) {
+			NoticeService.syncAll().then(function (notices) {
 				$scope.notices = notices;
 			}, $log.error);
 
@@ -66,11 +66,11 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.notice = notice;
 	})
 
-	.controller('PostsCtrl', function ($scope, $postService, $log, posts) {
+	.controller('PostsCtrl', function ($scope, PostService, $log, posts) {
 		$scope.posts = posts;
 
 		$scope.refreshItems = function () {
-			$postService.syncAll().then(function (posts) {
+			PostService.syncAll().then(function (posts) {
 				$scope.posts = posts;
 			}, $log.error);
 
@@ -78,7 +78,7 @@ angular.module('starter.controllers', ['starter.services'])
 		};
 	})
 
-	.controller('PostCtrl', function ($scope, $postService, $bookmarkService, $cordovaToast,
+	.controller('PostCtrl', function ($scope, PostService, BookmarkService, $cordovaToast,
 									  post, initBookmarkRev, $log, $sce) {
 		$scope.postTitle = post.title;
 		$scope.postDate = _.isUndefined(post.modified) ? post.date : post.modified;
@@ -88,13 +88,13 @@ angular.module('starter.controllers', ['starter.services'])
 
 		$scope.toggleBookmark = function () {
 			if ($scope.bookmarkRev) {
-				$bookmarkService.remove(post.ID, $scope.bookmarkRev)
+				BookmarkService.remove(post.ID, $scope.bookmarkRev)
 					.then(function () {
 						$scope.bookmarkRev = null;
 						$cordovaToast.showShortTop('북마크가 해제되었습니다.');
 					}, $log.error)
 			} else {
-				$bookmarkService.add(post.ID, post.title, post.excerpt)
+				BookmarkService.add(post.ID, post.title, post.excerpt)
 					.then(function (result) {
 						$scope.bookmarkRev = result.rev;
 						$cordovaToast.showShortTop('북마크가 설정되었습니다.');
@@ -103,7 +103,7 @@ angular.module('starter.controllers', ['starter.services'])
 		}
 	})
 
-	.controller('SearchCtrl', function ($scope, $ionicFilterBar, $postService, $timeout, $log) {
+	.controller('SearchCtrl', function ($scope, $ionicFilterBar, PostService, $timeout, $log) {
 		var filterBarInstance;
 
 		$scope.items = [];
@@ -118,7 +118,7 @@ angular.module('starter.controllers', ['starter.services'])
 					var that = this;
 					// TODO workaround. global.keyword 참조
 					global["keyword"] = expression;
-					$postService.query(expression, 20)
+					PostService.query(expression, 20)
 						.then(function (result) {
 							if (result.rows.length > 0) {
 								that.update(result.rows.map(function (row) {
@@ -139,7 +139,7 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.showFilterBar()
 	})
 
-	.controller('BookmarksCtrl', function ($scope, $bookmarkService, bookmarks, $log, $cordovaToast) {
+	.controller('BookmarksCtrl', function ($scope, BookmarkService, bookmarks, $log, $cordovaToast) {
 		$scope.data = {
 			showDelete: false
 		};
@@ -147,7 +147,7 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.bookmarks = bookmarks;
 
 		$scope.onItemDelete = function (bookmark) {
-			$bookmarkService.remove(bookmark._id, bookmark._rev)
+			BookmarkService.remove(bookmark._id, bookmark._rev)
 				.then(function () {
 					$cordovaToast.showShortTop('북마크가 해제되었습니다.');
 				}, $log.error);
@@ -156,12 +156,12 @@ angular.module('starter.controllers', ['starter.services'])
 		};
 	})
 
-	.controller('SettingsCtrl', function ($scope, $settingService, $log) {
-		$settingService.allDemo().then(function (settings) {
+	.controller('SettingsCtrl', function ($scope, SettingService, $log) {
+		SettingService.allDemo().then(function (settings) {
 			$scope.settings = settings;
 		}, $log.error);
 	})
 
-	.controller('AboutCtrl', function ($scope, $syncService) {
-		$scope.lastUpdate = $syncService.getLastUpdate();
+	.controller('AboutCtrl', function ($scope, SyncService) {
+		$scope.lastUpdate = SyncService.getLastUpdate();
 	});

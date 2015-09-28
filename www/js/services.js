@@ -1,9 +1,9 @@
 angular.module('starter.services', ['starter.constants'])
 
-	.factory('$localStorage',
+	.factory('LocalStorage',
 	/**
 	 * @ngdoc factory
-	 * @name $localStorage
+	 * @name LocalStorage
 	 * @param {$window} $window
 	 */
 	function ($window) {
@@ -23,10 +23,10 @@ angular.module('starter.services', ['starter.constants'])
 		}
 	})
 
-	.service('$restService',
+	.service('RestService',
 	/**
 	 * @ngdoc service
-	 * @name $restService
+	 * @name RestService
 	 * @param {$http} $http
 	 * @param {$q} $q
 	 * @param {$log} $log

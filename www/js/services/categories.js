@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('$categoryCacheService',
+	.service('CategoryCacheService',
 	/**
 	 * @ngdoc service
-	 * @name $categoryCacheService
+	 * @name CategoryCacheService
 	 * @param {PouchDB} pouchDB
 	 * @param {$log} $log
 	 */
@@ -27,15 +27,15 @@ angular.module('starter.services')
 		}
 	})
 
-	.service('$categoryService',
+	.service('CategoryService',
 	/**
 	 * @ngdoc service
-	 * @name $categoryService
-	 * @param {$restService} $restService
-	 * @param {$categoryCacheService} $categoryCacheService
+	 * @name CategoryService
+	 * @param {RestService} RestService
+	 * @param {CategoryCacheService} CategoryCacheService
 	 * @param {$q} $q
 	 */
-	function ($restService, $categoryCacheService, $q) {
+	function (RestService, CategoryCacheService, $q) {
 		var synced = $q.defer();
 
 		/**
@@ -52,7 +52,7 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.sync = function () {
-			return $restService.getPostsByCategory()
+			return RestService.getPostsByCategory()
 				.then(function (response) {
 					var categories = _.chain(response.data.posts)
 						.groupBy(function (post) {
@@ -79,7 +79,7 @@ angular.module('starter.services')
 						.sortBy(categoryOrder)
 						.value();
 
-					return $categoryCacheService.reset(categories);
+					return CategoryCacheService.reset(categories);
 				})
 				.then(function () {
 					synced.resolve();
@@ -100,7 +100,7 @@ angular.module('starter.services')
 		this.list = function () {
 			return synced.promise
 				.then(function () {
-					return $categoryCacheService.list()
+					return CategoryCacheService.list()
 				})
 				.then(function (result) {
 					return _.chain(result.rows)

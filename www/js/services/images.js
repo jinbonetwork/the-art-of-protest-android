@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('$imageService',
+	.service('ImageService',
 	/**
 	 * @ngdoc service
-	 * @name $imageService
+	 * @name ImageService
 	 * @param {$q} $q
 	 * @param {ApiEndpoint} ApiEndpoint
 	 */

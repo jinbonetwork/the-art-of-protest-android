@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('$bookmarkDb',
+	.service('BookmarkDb',
 	/**
 	 * @ngdoc service
-	 * @name $bookmarkDb
+	 * @name BookmarkDb
 	 * @param {PouchDB} pouchDB
 	 * @param {$log} $log
 	 */
@@ -59,19 +59,19 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$bookmarkService',
+	.service('BookmarkService',
 	/**
 	 * @ngdoc service
-	 * @name $bookmarkService
-	 * @param {$bookmarkDb} $bookmarkDb
+	 * @name BookmarkService
+	 * @param {BookmarkDb} BookmarkDb
 	 * @param {$q} $q
 	 */
-	function ($bookmarkDb, $q) {
+	function (BookmarkDb, $q) {
 		/**
 		 * @returns {Promise}
 		 */
 		this.list = function () {
-			return $bookmarkDb.list()
+			return BookmarkDb.list()
 				.then(function (result) {
 					return result.rows.map(function (obj) {
 						return obj.doc;
@@ -87,7 +87,7 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.add = function (postId, title, excerpt) {
-			return $bookmarkDb.put(postId, title, excerpt)
+			return BookmarkDb.put(postId, title, excerpt)
 				.then(function (result) {
 					return {
 						"id": result.id,
@@ -103,7 +103,7 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.remove = function (postId, docRev) {
-			return $bookmarkDb.remove(postId, docRev)
+			return BookmarkDb.remove(postId, docRev)
 		};
 
 		/**
@@ -113,7 +113,7 @@ angular.module('starter.services')
 		 */
 		this.exists = function (postId) {
 			return $q(function (resolve, reject) {
-				$bookmarkDb.get(postId)
+				BookmarkDb.get(postId)
 					.then(function (result) {
 						resolve(result._rev);
 					})

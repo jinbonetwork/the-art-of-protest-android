@@ -1,31 +1,31 @@
 angular.module('starter.services')
 
-	.service('$syncService',
+	.service('SyncService',
 	/**
 	 * @ngdoc service
-	 * @name $syncService
+	 * @name SyncService
 	 * @param {$q} $q
 	 * @param {$log} $log
-	 * @param {$localStorage} $localStorage
-	 * @param {$restService} $restService
-	 * @param {$categoryService} $categoryService
-	 * @param {$postService} $postService
-	 * @param {$noticeService} $noticeService
-	 * @param {$introService} $introService
-	 * @param {$settingService} $settingService
+	 * @param {LocalStorage} LocalStorage
+	 * @param {RestService} RestService
+	 * @param {CategoryService} CategoryService
+	 * @param {PostService} PostService
+	 * @param {NoticeService} NoticeService
+	 * @param {IntroService} IntroService
+	 * @param {SettingService} SettingService
 	 */
-	function ($q, $log, $localStorage, $restService, $categoryService, $postService, $noticeService, $introService, $settingService) {
+	function ($q, $log, LocalStorage, RestService, CategoryService, PostService, NoticeService, IntroService, SettingService) {
 		var HOME_KEY = "HOME_VERSION";
 		var POST_KEY = "POST_VERSION";
 
 		var checkUpdate = function () {
 			var deferred = $q.defer();
 
-			var homeVersion = $localStorage.get(HOME_KEY);
-			var postVersion = $localStorage.get(POST_KEY);
+			var homeVersion = LocalStorage.get(HOME_KEY);
+			var postVersion = LocalStorage.get(POST_KEY);
 
 			// TODO 홈 화면의 버전 확인
-			$restService.getPostVersion()
+			RestService.getPostVersion()
 				.then(function (response) {
 					var currPostVersion = response.data.posts[0].modified;
 					$log.debug(currPostVersion);
@@ -44,7 +44,7 @@ angular.module('starter.services')
 		};
 
 		this.getLastUpdate = function () {
-			return new Date($localStorage.get(POST_KEY));
+			return new Date(LocalStorage.get(POST_KEY));
 		};
 
 		/**
@@ -58,24 +58,24 @@ angular.module('starter.services')
 
 						return $q.all([
 							// 홈 업데이트
-							$introService.sync(),
+							IntroService.sync(),
 							// 카테고리 업데이트
-							$categoryService.sync(),
+							CategoryService.sync(),
 							// 글 업데이트
-							$postService.syncAll(),
+							PostService.syncAll(),
 							// TODO 개별 sync() 호출
 							// 공지 업데이트
-							$noticeService.syncAll()
+							NoticeService.syncAll()
 							// TODO 설정 확인
 						]).then(function () {
 							$log.debug("동기화가 완료되었습니다.");
-							$localStorage.set(POST_KEY, newestPostVersion);
+							LocalStorage.set(POST_KEY, newestPostVersion);
 						});
 					} else {
-						$introService.release();
-						$categoryService.release();
-						$postService.release();
-						$noticeService.release();
+						IntroService.release();
+						CategoryService.release();
+						PostService.release();
+						NoticeService.release();
 					}
 				});
 		}

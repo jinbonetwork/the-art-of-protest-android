@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('$settingService',
+	.service('SettingService',
 	/**
 	 * @ngdoc service
-	 * @name $settingService
+	 * @name SettingService
 	 * @param {PouchDB} pouchDB
 	 * @param {$log} $log
 	 * @param {$q} $q

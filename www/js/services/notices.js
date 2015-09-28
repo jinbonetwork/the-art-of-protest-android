@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('$noticeCacheService',
+	.service('NoticeCacheService',
 	/**
 	 * @ngdoc service
-	 * @name $noticeCacheService
+	 * @name NoticeCacheService
 	 * @param {PouchDB} pouchDB
 	 * @param {$log} $log
 	 */
@@ -40,15 +40,15 @@ angular.module('starter.services')
 		}
 	})
 
-	.service('$noticeService',
+	.service('NoticeService',
 	/**
 	 * @ngdoc service
-	 * @name $noticeService
-	 * @param {$restService} $restService
-	 * @param {$noticeCacheService} $noticeCacheService
+	 * @name NoticeService
+	 * @param {RestService} RestService
+	 * @param {NoticeCacheService} NoticeCacheService
 	 * @param {$q} $q
 	 */
-	function ($restService, $noticeCacheService, $q) {
+	function (RestService, NoticeCacheService, $q) {
 		var synced = $q.defer();
 
 		/**
@@ -56,7 +56,7 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.syncAll = function () {
-			return $restService.getNotices()
+			return RestService.getNotices()
 				.then(function (response) {
 					var posts = response.data.posts.map(function (obj) {
 						//PouchDB ID 추가
@@ -64,7 +64,7 @@ angular.module('starter.services')
 						return obj;
 					});
 
-					return $noticeCacheService.reset(posts);
+					return NoticeCacheService.reset(posts);
 				})
 				.then(function () {
 					synced.resolve();
@@ -77,11 +77,11 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.sync = function (noticeId) {
-			return $restService.getNotice(noticeId)
+			return RestService.getNotice(noticeId)
 				.then(function (response) {
 					var data = response.data;
 					data._id = data.ID + "";
-					$noticeCacheService.put(data);
+					NoticeCacheService.put(data);
 
 					return data;
 				});
@@ -101,7 +101,7 @@ angular.module('starter.services')
 		this.list = function () {
 			return synced.promise
 				.then(function () {
-					return $noticeCacheService.list()
+					return NoticeCacheService.list()
 				})
 				.then(function (result) {
 					return _.chain(result.rows)
@@ -122,7 +122,7 @@ angular.module('starter.services')
 		this.getAvailable = function () {
 			return synced.promise
 				.then(function () {
-					return $noticeCacheService.list()
+					return NoticeCacheService.list()
 				})
 				.then(function (result) {
 					return _.chain(result.rows)
@@ -145,7 +145,7 @@ angular.module('starter.services')
 		this.get = function (noticeId) {
 			return synced.promise
 				.then(function () {
-					return $noticeCacheService.get(noticeId);
+					return NoticeCacheService.get(noticeId);
 				});
 		};
 	});

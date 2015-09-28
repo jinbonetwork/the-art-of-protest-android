@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('$postCacheService',
+	.service('PostCacheService',
 	/**
 	 * @ngdoc service
-	 * @name $postCacheService
+	 * @name PostCacheService
 	 * @param {PouchDB} pouchDB
 	 * @param {$log} $log
 	 */
@@ -44,15 +44,15 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$postService',
+	.service('PostService',
 	/**
 	 * @ngdoc service
-	 * @name $postService
-	 * @param {$restService} $restService
-	 * @param {$postCacheService} $postCacheService
+	 * @name PostService
+	 * @param {RestService} RestService
+	 * @param {PostCacheService} PostCacheService
 	 * @param {$q} $q
 	 */
-	function ($restService, $postCacheService, $q) {
+	function (RestService, PostCacheService, $q) {
 		var synced = $q.defer();
 
 		/**
@@ -70,7 +70,7 @@ angular.module('starter.services')
 		 */
 		this.syncAll = function () {
 			//TODO attachments 동기화
-			return $restService.getPosts()
+			return RestService.getPosts()
 				.then(function (response) {
 					var posts = _.chain(response.data.posts)
 						.map(function (obj) {
@@ -81,7 +81,7 @@ angular.module('starter.services')
 						.sortBy(postOrder)
 						.value();
 
-					return $postCacheService.reset(posts);
+					return PostCacheService.reset(posts);
 				})
 				.then(function () {
 					synced.resolve();
@@ -94,11 +94,11 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.sync = function (postId) {
-			return $restService.getPost(postId)
+			return RestService.getPost(postId)
 				.then(function (response) {
 					var data = response.data;
 					data._id = data.ID + "";
-					$postCacheService.put(data);
+					PostCacheService.put(data);
 
 					return data;
 				});
@@ -118,7 +118,7 @@ angular.module('starter.services')
 		this.list = function () {
 			return synced.promise
 				.then(function () {
-					return $postCacheService.list();
+					return PostCacheService.list();
 				})
 				.then(function (result) {
 					return _.chain(result.rows)
@@ -138,7 +138,7 @@ angular.module('starter.services')
 		this.get = function (postId) {
 			return synced.promise
 				.then(function () {
-					return $postCacheService.get(postId);
+					return PostCacheService.get(postId);
 				});
 		};
 
@@ -150,7 +150,7 @@ angular.module('starter.services')
 		 * @returns {Promise}
 		 */
 		this.query = function (keyword, limit) {
-			return $postCacheService.query(function (doc) {
+			return PostCacheService.query(function (doc) {
 				// TODO workaround. global.keyword 참조
 				var keyword = global["keyword"];
 				if (doc.title.indexOf(keyword) > -1 || doc.content.indexOf(keyword) > -1)

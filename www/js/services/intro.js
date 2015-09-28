@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('$introCacheService',
+	.service('IntroCacheService',
 	/**
 	 * @ngdoc service
-	 * @name $introCacheService
+	 * @name IntroCacheService
 	 * @param {PouchDB} pouchDB
 	 * @param {$log} $log
 	 */
@@ -45,17 +45,17 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('$introService',
+	.service('IntroService',
 	/**
 	 * @ngdoc service
-	 * @name $introService
+	 * @name IntroService
 	 * @param {$q} $q
-	 * @param {$restService} $restService
+	 * @param {RestService} RestService
 	 * @param {$log} $log
-	 * @param {$introCacheService} $introCacheService
-	 * @param {$imageService} $imageService
+	 * @param {IntroCacheService} IntroCacheService
+	 * @param {ImageService} ImageService
 	 */
-	function ($q, $restService, $log, $introCacheService, $imageService) {
+	function ($q, RestService, $log, IntroCacheService, ImageService) {
 		var synced = $q.defer();
 
 		var parseHtml = function (html) {
@@ -79,7 +79,7 @@ angular.module('starter.services')
 		this.sync = function () {
 			var result = null;
 
-			return $restService.getHome()
+			return RestService.getHome()
 				.then(function (data) {
 					var header = data.headers()['last-modified'];
 					if (_.isUndefined(header)) {
@@ -93,10 +93,10 @@ angular.module('starter.services')
 					result = parseHtml(html);
 
 					//TODO 불필요한 업데이트 차단
-					return $introCacheService.put(html, lastModified)
+					return IntroCacheService.put(html, lastModified)
 				})
 				.then(function () {
-					var promises = $imageService.imgTagsToBlobs(result.images);
+					var promises = ImageService.imgTagsToBlobs(result.images);
 
 					return $q.all(promises);
 				})
@@ -109,7 +109,7 @@ angular.module('starter.services')
 						}
 					});
 
-					return $introCacheService.putAttachment(attachments)
+					return IntroCacheService.putAttachment(attachments)
 				})
 				.then(function () {
 					synced.resolve();
@@ -134,12 +134,12 @@ angular.module('starter.services')
 
 			return synced.promise
 				.then(function () {
-					return $introCacheService.get(options)
+					return IntroCacheService.get(options)
 				})
 				.then(function (doc) {
 					$log.debug(doc);
 					var result = parseHtml(doc.html);
-					$imageService.blobsToImgTags(result.images, doc._attachments);
+					ImageService.blobsToImgTags(result.images, doc._attachments);
 
 					return result;
 				});
