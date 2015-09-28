@@ -32,10 +32,8 @@ angular.module('starter.services')
 					$log.debug(postVersion);
 
 					if (_.isUndefined(postVersion) || currPostVersion != postVersion) {
-						$localStorage.set(POST_KEY, currPostVersion);
-
 						$log.debug("동기화가 필요합니다.");
-						deferred.resolve(true);
+						deferred.resolve(currPostVersion);
 					} else {
 						$log.debug("최신으로 동기화되어 있습니다.");
 						deferred.resolve(false);
@@ -54,8 +52,10 @@ angular.module('starter.services')
 		 */
 		this.sync = function () {
 			return checkUpdate()
-				.then(function (needUpdate) {
-					if (needUpdate) {
+				.then(function (newestPostVersion) {
+					if (newestPostVersion !== false) {
+						$log.debug("동기화를 시작합니다.");
+
 						return $q.all([
 							// 홈 업데이트
 							$introService.sync(),
@@ -67,7 +67,10 @@ angular.module('starter.services')
 							// 공지 업데이트
 							$noticeService.syncAll()
 							// TODO 설정 확인
-						]);
+						]).then(function () {
+							$log.debug("동기화가 완료되었습니다.");
+							$localStorage.set(POST_KEY, newestPostVersion);
+						});
 					} else {
 						$introService.release();
 						$categoryService.release();
