@@ -19,13 +19,11 @@ angular.module('starter.services')
 		var POST_KEY = "POST_VERSION";
 
 		var checkUpdate = function () {
-			var deferred = $q.defer();
-
 			var homeVersion = LocalStorage.get(HOME_KEY);
 			var postVersion = LocalStorage.get(POST_KEY);
 
 			// TODO 홈 화면의 버전 확인
-			RestService.getPostVersion()
+			return RestService.getPostVersion()
 				.then(function (response) {
 					var currPostVersion = response.data.posts[0].modified;
 					$log.debug(currPostVersion);
@@ -33,14 +31,12 @@ angular.module('starter.services')
 
 					if (_.isUndefined(postVersion) || currPostVersion != postVersion) {
 						$log.debug("동기화가 필요합니다.");
-						deferred.resolve(currPostVersion);
+						return currPostVersion;
 					} else {
 						$log.debug("최신으로 동기화되어 있습니다.");
-						deferred.resolve(false);
+						return false;
 					}
 				});
-
-			return deferred.promise;
 		};
 
 		this.getLastUpdate = function () {
