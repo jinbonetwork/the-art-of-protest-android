@@ -3,7 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-	<meta http-equiv="Content-Security-Policy" content="connect-src 'self' http://theartofprotest.jinbo.net https://public-api.wordpress.com">
+	<meta http-equiv="Content-Security-Policy"
+		  content="connect-src 'self' http://theartofprotest.jinbo.net https://public-api.wordpress.com">
 	<title></title>
 
 	<link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -47,14 +48,10 @@
 <body>
 <ion-nav-view></ion-nav-view>
 <script id="loading.html" type="text/ng-template">
-	<ion-modal-view>
-		<ion-header-bar>
-			<h1 class="title">집회시위 제대로</h1>
-		</ion-header-bar>
-		<ion-content>
-			업데이트를 확인하는 중입니다.
-		</ion-content>
-	</ion-modal-view>
+	<div>
+		<ion-spinner></ion-spinner>
+	</div>
+	<div>업데이트를 확인하는 중입니다.</div>
 </script>
 </body>
 </html>

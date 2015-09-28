@@ -1,6 +1,6 @@
 angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'starter.controllers'])
 
-	.run(function ($ionicPlatform, $ionicModal, $ionicBackdrop, SyncService, $cordovaSplashscreen, $cordovaToast, $log, $rootScope, $ionicConfig) {
+	.run(function ($ionicPlatform, $ionicLoading, SyncService, $cordovaSplashscreen, $log, $rootScope, $ionicConfig) {
 		// 안드로이드에서 헤더 바 가운데 정렬을 강제
 		$ionicConfig.navBar.alignTitle('center');
 
@@ -8,40 +8,29 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 		$rootScope.$on('$stateChangeError', $log.error);
 
 		$ionicPlatform.ready(function () {
-			var modalInstance = null;
-
 			// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 			// for form inputs)
 			if (window.cordova && window.cordova.plugins.Keyboard) {
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 				cordova.plugins.Keyboard.disableScroll(true);
-
-				$cordovaToast.showLongBottom('버전을 확인하고 있습니다.');
-			} else {
-				// 개발자 화면을 위한 로딩
-				$ionicModal.fromTemplateUrl('loading.html', {
-					animation: 'slide-in-up'
-				}).then(function (modal) {
-					modalInstance = modal;
-					modalInstance.show();
-				});
 			}
 
 			//동기화 시작
 			$log.info("동기화를 시작합니다.");
-			$ionicBackdrop.retain();
+			$ionicLoading.show({
+				templateUrl: "loading.html"
+			});
+
+			try {
+				$cordovaSplashscreen.hide();
+			} catch (err) {
+				$log.error(err);
+			}
+
 			SyncService.sync()
 				.then(function (result) {
 					$log.info("동기화에 성공했습니다.");
-					$ionicBackdrop.release();
-
-					try {
-						$cordovaSplashscreen.hide();
-					} catch (err) {
-						$log.error(err);
-					}
-
-					if (modalInstance != null) modalInstance.hide();
+					$ionicLoading.hide();
 				})
 				.catch(function (err) {
 					$log.error("동기화에 실패했습니다.", err);
@@ -57,6 +46,10 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 
 	.config(function ($stateProvider, $urlRouterProvider) {
 		$stateProvider
+
+			.state('loading', {
+				url: '/'
+			})
 
 			.state('app', {
 				url: '/app',
