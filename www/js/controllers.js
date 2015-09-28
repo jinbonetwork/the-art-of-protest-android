@@ -50,11 +50,11 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.contents = $sce.trustAsHtml(contents.style.outerHTML + contents.body.innerHTML);
 	})
 
-	.controller('NoticesCtrl', function (NoticeService, $scope, $log, notices) {
+	.controller('NoticesCtrl', function (NoticeUpdater, $scope, $log, notices) {
 		$scope.notices = notices;
 
 		$scope.refreshItems = function () {
-			NoticeService.syncAll().then(function (notices) {
+			NoticeUpdater.updateAll().then(function (notices) {
 				$scope.notices = notices;
 			}, $log.error);
 
@@ -66,11 +66,11 @@ angular.module('starter.controllers', ['starter.services'])
 		$scope.notice = notice;
 	})
 
-	.controller('PostsCtrl', function ($scope, PostService, $log, posts) {
+	.controller('PostsCtrl', function ($scope, PostUpdater, $log, posts) {
 		$scope.posts = posts;
 
 		$scope.refreshItems = function () {
-			PostService.syncAll().then(function (posts) {
+			PostUpdater.updateAll().then(function (posts) {
 				$scope.posts = posts;
 			}, $log.error);
 
@@ -162,6 +162,6 @@ angular.module('starter.controllers', ['starter.services'])
 		}, $log.error);
 	})
 
-	.controller('AboutCtrl', function ($scope, SyncService) {
-		$scope.lastUpdate = SyncService.getLastUpdate();
+	.controller('AboutCtrl', function ($scope, AppUpdater) {
+		$scope.lastUpdate = AppUpdater.getLastUpdate();
 	});

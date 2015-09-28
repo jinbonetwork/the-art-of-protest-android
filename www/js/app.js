@@ -1,6 +1,20 @@
 angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'starter.controllers'])
 
-	.run(function ($ionicPlatform, $ionicLoading, SyncService, $cordovaSplashscreen, $log, $rootScope, $ionicConfig) {
+	.run(
+	/**
+	 * @param {$ionicPlatform} $ionicPlatform
+	 * @param {$ionicLoading} $ionicLoading
+	 * @param {$ionicPopup} $ionicPopup
+	 * @param {AppLoadLock} AppLoadLock
+	 * @param {AppUpdater} AppUpdater
+	 * @param {UPDATE_RESULT} UPDATE_RESULT
+	 * @param {$cordovaSplashscreen} $cordovaSplashscreen
+	 * @param {$cordovaToast} $cordovaToast
+	 * @param {$log} $log
+	 * @param {$rootScope} $rootScope
+	 * @param {$ionicConfig} $ionicConfig
+	 */
+	function ($ionicPlatform, $ionicLoading, $ionicPopup, AppLoadLock, AppUpdater, UPDATE_RESULT, $cordovaSplashscreen, $cordovaToast, $log, $rootScope, $ionicConfig) {
 		// 안드로이드에서 헤더 바 가운데 정렬을 강제
 		$ionicConfig.navBar.alignTitle('center');
 
@@ -15,8 +29,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				cordova.plugins.Keyboard.disableScroll(true);
 			}
 
-			//동기화 시작
-			$log.info("동기화를 시작합니다.");
+			//업데이트 시작
+			$log.info("업데이트를 확인합니다.");
 			$ionicLoading.show({
 				templateUrl: "loading.html"
 			});
@@ -24,18 +38,50 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 			try {
 				$cordovaSplashscreen.hide();
 			} catch (err) {
+				// 개발시 브라우저 환경 등 스플래시 스크린이 없는 경우
 				$log.error(err);
 			}
 
-			SyncService.sync()
+			AppUpdater.update()
 				.then(function (result) {
-					$log.info("동기화에 성공했습니다.");
-					$ionicLoading.hide();
-				})
-				.catch(function (err) {
-					$log.error("동기화에 실패했습니다.", err);
+					if (result.type == "SUCCESS") {
+						switch (result) {
+							case UPDATE_RESULT.ALREADY:
+								$log.info("이미 최신 버전입니다.");
+								break;
+							default:
+								$log.info("업데이트가 완료되었습니다.", result);
+						}
+
+						AppLoadLock.release();
+						$ionicLoading.hide();
+					} else {
+						switch (result) {
+							case UPDATE_RESULT.NETWORK_ERROR:
+								$log.warn("업데이트 사이트에 연결할 수 없습니다.");
+								break;
+							default:
+								$log.warn("업데이트에 실패했습니다.", err);
+						}
+
+						$ionicLoading.hide();
+
+						if (AppUpdater.getLastUpdate() !== undefined) {
+							AppLoadLock.release();
+							$cordovaToast.showLongBottom('오프라인으로 열람합니다.');
+						} else {
+							var alertPopup = $ionicPopup.alert({
+								title: '연결 오류',
+								template: "데이터 다운로드를 위해 첫 실행시 인터넷 연결이 필요합니다. 연결 상태를 확인해주세요."
+							});
+							alertPopup.then(function () {
+								$log.warn('데이터를 받은 적이 없고 인터넷에 연결되어있지 않아 프로그램을 종료합니다.');
+								ionic.Platform.exitApp();
+							});
+						}
+					}
 				});
-			//동기화 끝
+			//업데이트 끝
 
 			if (window.StatusBar) {
 				// org.apache.cordova.statusbar required
@@ -44,9 +90,28 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 		});
 	})
 
+	.service('AppLoadLock',
+	/**
+	 * $stateProvider에서 지연된 로딩을 구현하기 위한 락.
+	 *
+	 * @ngdoc service
+	 * @name AppLoadLock
+	 * @param {$q} $q
+	 */
+	function ($q) {
+		var deferred = $q.defer();
+
+		this.release = function () {
+			deferred.resolve();
+		};
+
+		this.success = function (func) {
+			return deferred.promise.then(func);
+		};
+	})
+
 	.config(function ($stateProvider, $urlRouterProvider) {
 		$stateProvider
-
 			.state('loading', {
 				url: '/'
 			})
@@ -57,11 +122,15 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 				templateUrl: 'templates/menu.html',
 				controller: 'AppCtrl',
 				resolve: {
-					'categories': function (CategoryService) {
-						return CategoryService.list();
+					'categories': function (AppLoadLock, CategoryService) {
+						return AppLoadLock.success(function () {
+							return CategoryService.list();
+						});
 					},
-					"notice": function (NoticeService) {
-						return NoticeService.getAvailable();
+					"notice": function (AppLoadLock, NoticeService) {
+						return AppLoadLock.success(function () {
+							return NoticeService.getAvailable();
+						});
 					}
 				}
 			})
@@ -75,8 +144,10 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				},
 				resolve: {
-					'contents': function (IntroService) {
-						return IntroService.get();
+					'contents': function (AppLoadLock, IntroService) {
+						return AppLoadLock.success(function () {
+							return IntroService.get();
+						});
 					}
 				}
 			})
@@ -100,8 +171,10 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				},
 				resolve: {
-					"notices": function (NoticeService) {
-						return NoticeService.list();
+					"notices": function (AppLoadLock, NoticeService) {
+						return AppLoadLock.success(function () {
+							return NoticeService.list();
+						});
 					}
 				}
 			})
@@ -118,8 +191,10 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					"noticeId": function ($stateParams) {
 						return $stateParams.noticeId;
 					},
-					"notice": function (NoticeService, noticeId) {
-						return NoticeService.get(noticeId);
+					"notice": function (AppLoadLock, NoticeService, noticeId) {
+						return AppLoadLock.success(function () {
+							return NoticeService.get(noticeId);
+						});
 					}
 				}
 			})
@@ -133,8 +208,10 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				},
 				resolve: {
-					"posts": function (PostService) {
-						return PostService.list();
+					"posts": function (AppLoadLock, PostService) {
+						return AppLoadLock.success(function () {
+							return PostService.list();
+						});
 					}
 				}
 			})
@@ -151,8 +228,10 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					"postId": function ($stateParams) {
 						return $stateParams.postId;
 					},
-					"post": function (postId, PostService) {
-						return PostService.get(postId);
+					"post": function (AppLoadLock, postId, PostService) {
+						return AppLoadLock.success(function () {
+							return PostService.get(postId);
+						});
 					},
 					"initBookmarkRev": function (postId, BookmarkService) {
 						return BookmarkService.exists(postId);

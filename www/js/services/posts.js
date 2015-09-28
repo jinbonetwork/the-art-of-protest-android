@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('PostCacheService',
+	.service('PostDao',
 	/**
 	 * @ngdoc service
-	 * @name PostCacheService
+	 * @name PostDao
 	 * @param {PouchDB} pouchDB
 	 * @param {$log} $log
 	 */
@@ -44,16 +44,14 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('PostService',
+	.factory('PostUpdater',
 	/**
-	 * @ngdoc service
-	 * @name PostService
+	 * @ngdoc factory
+	 * @name PostUpdater
 	 * @param {RestService} RestService
-	 * @param {PostCacheService} PostCacheService
-	 * @param {$q} $q
+	 * @param {PostDao} PostDao
 	 */
-	function (RestService, PostCacheService, $q) {
-		var synced = $q.defer();
+	function (RestService, PostDao) {
 
 		/**
 		 * 게시물의 정렬기준을 반환한다.
@@ -64,98 +62,104 @@ angular.module('starter.services')
 			return post.menu_order;
 		};
 
-		/**
-		 * 서버로부터 새로 목록을 내려받아 캐시한다.
-		 * @returns {Promise}
-		 */
-		this.syncAll = function () {
-			//TODO attachments 동기화
-			return RestService.getPosts()
-				.then(function (response) {
-					var posts = _.chain(response.data.posts)
-						.map(function (obj) {
-							//PouchDB ID 추가
-							obj._id = obj.ID + "";
-							return obj;
-						})
-						.sortBy(postOrder)
-						.value();
+		return {
+			/**
+			 * 서버로부터 새로 목록을 내려받아 캐시한다.
+			 * @returns {Promise}
+			 */
+			updateAll: function () {
+				//TODO attachments 업데이트
+				return RestService.getPosts()
+					.then(function (response) {
+						var posts = _.chain(response.data.posts)
+							.map(function (obj) {
+								//PouchDB ID 추가
+								obj._id = obj.ID + "";
+								return obj;
+							})
+							.sortBy(postOrder)
+							.value();
 
-					return PostCacheService.reset(posts);
-				})
-				.then(function () {
-					synced.resolve();
-				});
+						return PostDao.reset(posts);
+					});
+			},
+
+			/**
+			 * 서버로부터 새로 항목을 내려받아 캐시한다.
+			 * @param {Number} postId 내려받을 항목의 ID
+			 * @returns {Promise}
+			 */
+			update: function (postId) {
+				return RestService.getPost(postId)
+					.then(function (response) {
+						var data = response.data;
+						data._id = data.ID + "";
+						PostDao.put(data);
+
+						return data;
+					});
+			}
+		};
+	})
+
+	.factory('PostService',
+	/**
+	 * @ngdoc factory
+	 * @name PostService
+	 * @param {PostDao} PostDao
+	 */
+	function (PostDao) {
+
+		/**
+		 * 게시물의 정렬기준을 반환한다.
+		 * @param post
+		 * @returns {Number}
+		 */
+		var postOrder = function (post) {
+			return post.menu_order;
 		};
 
-		/**
-		 * 서버로부터 새로 항목을 내려받아 캐시한다.
-		 * @param {Number} postId 내려받을 항목의 ID
-		 * @returns {Promise}
-		 */
-		this.sync = function (postId) {
-			return RestService.getPost(postId)
-				.then(function (response) {
-					var data = response.data;
-					data._id = data.ID + "";
-					PostCacheService.put(data);
+		return {
+			/**
+			 * 캐시된 목록을 가져온다.
+			 * @returns {Promise}
+			 */
+			list: function () {
+				return PostDao.list()
+					.then(function (result) {
+						return _.chain(result.rows)
+							.map(function (obj) {
+								return obj.doc;
+							})
+							.sortBy(postOrder)
+							.value();
+					});
+			},
 
-					return data;
-				});
-		};
+			/**
+			 * 캐시된 항목을 가져온다.
+			 * @param {Number} postId 가져올 항목의 ID
+			 * @returns {Promise}
+			 */
+			get: function (postId) {
+				return PostDao.get(postId)
+			},
 
-		/**
-		 * 동기화가 필요없을 때 락을 해제한다.
-		 */
-		this.release = function () {
-			synced.resolve();
-		};
-
-		/**
-		 * 캐시된 목록을 가져온다.
-		 * @returns {Promise}
-		 */
-		this.list = function () {
-			return synced.promise
-				.then(function () {
-					return PostCacheService.list();
-				})
-				.then(function (result) {
-					return _.chain(result.rows)
-						.map(function (obj) {
-							return obj.doc;
-						})
-						.sortBy(postOrder)
-						.value();
-				});
-		};
-
-		/**
-		 * 캐시된 항목을 가져온다.
-		 * @param {Number} postId 가져올 항목의 ID
-		 * @returns {Promise}
-		 */
-		this.get = function (postId) {
-			return synced.promise
-				.then(function () {
-					return PostCacheService.get(postId);
-				});
-		};
-
-		/**
-		 * 문서 검색
-		 *
-		 * @param {string} keyword
-		 * @param {number} limit
-		 * @returns {Promise}
-		 */
-		this.query = function (keyword, limit) {
-			return PostCacheService.query(function (doc) {
-				// TODO workaround. global.keyword 참조
-				var keyword = global["keyword"];
-				if (doc.title.indexOf(keyword) > -1 || doc.content.indexOf(keyword) > -1)
-					emit(doc);
-			}, {include_docs: true, limit: limit});
+			/**
+			 * 문서 검색
+			 *
+			 * @param {string} keyword
+			 * @param {number} limit
+			 * @returns {Promise}
+			 */
+			query: function (keyword, limit) {
+				return PostDao.query(function (doc) {
+					// TODO workaround. global.keyword 참조
+					var keyword = global["keyword"];
+					if (doc.title.indexOf(keyword) > -1 || doc.content.indexOf(keyword) > -1)
+						emit(doc);
+				}, {include_docs: true, limit: limit});
+			}
 		};
 	});
 

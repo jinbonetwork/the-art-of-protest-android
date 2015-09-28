@@ -1,9 +1,9 @@
 angular.module('starter.services')
 
-	.service('BookmarkDb',
+	.service('BookmarkDao',
 	/**
 	 * @ngdoc service
-	 * @name BookmarkDb
+	 * @name BookmarkDao
 	 * @param {PouchDB} pouchDB
 	 * @param {$log} $log
 	 */
@@ -59,71 +59,73 @@ angular.module('starter.services')
 		};
 	})
 
-	.service('BookmarkService',
+	.factory('BookmarkService',
 	/**
-	 * @ngdoc service
+	 * @ngdoc factory
 	 * @name BookmarkService
-	 * @param {BookmarkDb} BookmarkDb
+	 * @param {BookmarkDao} BookmarkDao
 	 * @param {$q} $q
 	 */
-	function (BookmarkDb, $q) {
-		/**
-		 * @returns {Promise}
-		 */
-		this.list = function () {
-			return BookmarkDb.list()
-				.then(function (result) {
-					return result.rows.map(function (obj) {
-						return obj.doc;
-					});
-				});
-		};
-
-		/**
-		 * 북마크를 추가한다.
-		 * @param {Number} postId
-		 * @param {String} title
-		 * @param {String} excerpt
-		 * @returns {Promise}
-		 */
-		this.add = function (postId, title, excerpt) {
-			return BookmarkDb.put(postId, title, excerpt)
-				.then(function (result) {
-					return {
-						"id": result.id,
-						"rev": result.rev
-					};
-				});
-		};
-
-		/**
-		 * 북마크를 제거한다.
-		 * @param {Number} postId
-		 * @param {String} docRev
-		 * @returns {Promise}
-		 */
-		this.remove = function (postId, docRev) {
-			return BookmarkDb.remove(postId, docRev)
-		};
-
-		/**
-		 * 페이지가 북마크되어있는지 확인한다.
-		 * @param {Number} postId 확인할 페이지의 PostID
-		 * @returns {Promise}
-		 */
-		this.exists = function (postId) {
-			return $q(function (resolve, reject) {
-				BookmarkDb.get(postId)
+	function (BookmarkDao, $q) {
+		return {
+			/**
+			 * @returns {Promise}
+			 */
+			list: function () {
+				return BookmarkDao.list()
 					.then(function (result) {
-						resolve(result._rev);
-					})
-					.catch(function (err) {
-						if (err.status == 404) {
-							resolve(null);
-						} else {
-							reject(err)
-						}
+						return result.rows.map(function (obj) {
+							return obj.doc;
+						});
 					});
-			});
-		}
+			},
+
+			/**
+			 * 북마크를 추가한다.
+			 * @param {Number} postId
+			 * @param {String} title
+			 * @param {String} excerpt
+			 * @returns {Promise}
+			 */
+			add: function (postId, title, excerpt) {
+				return BookmarkDao.put(postId, title, excerpt)
+					.then(function (result) {
+						return {
+							"id": result.id,
+							"rev": result.rev
+						};
+					});
+			},
+
+			/**
+			 * 북마크를 제거한다.
+			 * @param {Number} postId
+			 * @param {String} docRev
+			 * @returns {Promise}
+			 */
+			remove: function (postId, docRev) {
+				return BookmarkDao.remove(postId, docRev)
+			},
+
+			/**
+			 * 페이지가 북마크되어있는지 확인한다.
+			 * @param {Number} postId 확인할 페이지의 PostID
+			 * @returns {Promise}
+			 */
+			exists: function (postId) {
+				return $q(function (resolve, reject) {
+					BookmarkDao.get(postId)
+						.then(function (result) {
+							resolve(result._rev);
+						})
+						.catch(function (err) {
+							if (err.status == 404) {
+								resolve(null);
+							} else {
+								reject(err)
+							}
+						});
+				});
+			}
+		};
 	});

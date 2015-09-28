@@ -1,20 +1,46 @@
 angular.module('starter.services')
 
-	.service('SyncService',
+	.constant('UPDATE_RESULT',
 	/**
-	 * @ngdoc service
-	 * @name SyncService
+	 * @ngdoc constant
+	 * @name UPDATE_RESULT
+	 */
+	{
+		// TODO Custom Errors로 개선 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+		UPDATED: {
+			type: "SUCCESS",
+			id: "UPDATED"
+		},
+		ALREADY: {
+			type: "SUCCESS",
+			id: "ALREADY"
+		},
+		NETWORK_ERROR: {
+			type: "FAILED",
+			id: "NETWORK_ERROR"
+		},
+		UNKNOWN_ERROR: {
+			type: "FAILED",
+			id: "UNKNOWN_ERROR"
+		}
+	})
+
+	.factory('AppUpdater',
+	/**
+	 * @ngdoc factory
+	 * @name AppUpdater
 	 * @param {$q} $q
 	 * @param {$log} $log
 	 * @param {LocalStorage} LocalStorage
 	 * @param {RestService} RestService
-	 * @param {CategoryService} CategoryService
-	 * @param {PostService} PostService
-	 * @param {NoticeService} NoticeService
-	 * @param {IntroService} IntroService
+	 * @param {CategoryUpdater} CategoryUpdater
+	 * @param {PostUpdater} PostUpdater
+	 * @param {NoticeUpdater} NoticeUpdater
+	 * @param {IntroUpdater} IntroUpdater
 	 * @param {SettingService} SettingService
+	 * @param {UPDATE_RESULT} UPDATE_RESULT
 	 */
-	function ($q, $log, LocalStorage, RestService, CategoryService, PostService, NoticeService, IntroService, SettingService) {
+	function ($q, $log, LocalStorage, RestService, CategoryUpdater, PostUpdater, NoticeUpdater, IntroUpdater, SettingService, UPDATE_RESULT) {
 		var HOME_KEY = "HOME_VERSION";
 		var POST_KEY = "POST_VERSION";
 
@@ -30,49 +56,59 @@ angular.module('starter.services')
 					$log.debug(postVersion);
 
 					if (_.isUndefined(postVersion) || currPostVersion != postVersion) {
-						$log.debug("동기화가 필요합니다.");
+						$log.info("업데이트가 필요합니다.");
 						return currPostVersion;
 					} else {
-						$log.debug("최신으로 동기화되어 있습니다.");
+						$log.info("최신으로 업데이트되어 있습니다.");
 						return false;
 					}
 				});
 		};
 
-		this.getLastUpdate = function () {
-			return new Date(LocalStorage.get(POST_KEY));
+		return {
+			getLastUpdate: function () {
+				var postVersion = LocalStorage.get(POST_KEY);
+
+				if (_.isUndefined(postVersion)) {
+					return undefined;
+				} else {
+					return new Date(postVersion);
+				}
+			},
+
+			/**
+			 * @returns {Promise}
+			 */
+			update: function () {
+				return checkUpdate()
+					.then(function (newestPostVersion) {
+						if (newestPostVersion !== false) {
+							$log.info("업데이트를 시작합니다.");
+
+							return $q.all([
+								// 홈 업데이트
+								IntroUpdater.update(),
+								// 카테고리 업데이트
+								CategoryUpdater.update(),
+								// 글 업데이트
+								PostUpdater.updateAll(),
+								// TODO 개별 update() 호출
+								// 공지 업데이트
+								NoticeUpdater.updateAll()
+								// TODO 설정 확인
+							]).then(function () {
+								$log.info("업데이트가 완료되었습니다.");
+								LocalStorage.set(POST_KEY, newestPostVersion);
+								return UPDATE_RESULT.UPDATED;
+							});
+						}
+
+						return UPDATE_RESULT.ALREADY;
+					}).catch(function (err) {
+						//TODO err 분석
+						$log.warn("업데이트 중 에러가 발생했습니다.", err);
+						return UPDATE_RESULT.NETWORK_ERROR;
+					});
+			}
 		};
-
-		/**
-		 * @returns {Promise}
-		 */
-		this.sync = function () {
-			return checkUpdate()
-				.then(function (newestPostVersion) {
-					if (newestPostVersion !== false) {
-						$log.debug("동기화를 시작합니다.");
-
-						return $q.all([
-							// 홈 업데이트
-							IntroService.sync(),
-							// 카테고리 업데이트
-							CategoryService.sync(),
-							// 글 업데이트
-							PostService.syncAll(),
-							// TODO 개별 sync() 호출
-							// 공지 업데이트
-							NoticeService.syncAll()
-							// TODO 설정 확인
-						]).then(function () {
-							$log.debug("동기화가 완료되었습니다.");
-							LocalStorage.set(POST_KEY, newestPostVersion);
-						});
-					} else {
-						IntroService.release();
-						CategoryService.release();
-						PostService.release();
-						NoticeService.release();
-					}
-				});
-		}
 	});
