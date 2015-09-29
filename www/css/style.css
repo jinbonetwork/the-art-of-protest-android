@@ -30,8 +30,12 @@ ion-content {
 	background-color: #f7f7f7;
 }
 
-#post-header .update{
+#post-header .update {
 	font-size: 0.7em;
+}
+
+#post-content sub {
+	bottom: 0; /* #32 이슈 수정 */
 }
 
 #about p {

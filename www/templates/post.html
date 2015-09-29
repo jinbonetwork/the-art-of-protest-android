@@ -9,6 +9,6 @@
 			<h1>{{::postTitle}}</h1>
 			<span class="update">최종 업데이트 : {{::postDate | date:'yyyy-MM-dd'}}</span>
 		</div>
-		<div ng-bind-html="::postContent"></div>
+		<div id="post-content" ng-bind-html="::postContent"></div>
 	</ion-content>
 </ion-view>
