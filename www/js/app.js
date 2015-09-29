@@ -5,6 +5,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 	 * @param {$ionicPlatform} $ionicPlatform
 	 * @param {$ionicLoading} $ionicLoading
 	 * @param {$ionicPopup} $ionicPopup
+	 * @param {$ionicHistory} $ionicHistory
 	 * @param {AppLoadLock} AppLoadLock
 	 * @param {AppUpdater} AppUpdater
 	 * @param {UPDATE_RESULT} UPDATE_RESULT
@@ -14,7 +15,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 	 * @param {$rootScope} $rootScope
 	 * @param {$ionicConfig} $ionicConfig
 	 */
-	function ($ionicPlatform, $ionicLoading, $ionicPopup, AppLoadLock, AppUpdater, UPDATE_RESULT, $cordovaSplashscreen, $cordovaToast, $log, $rootScope, $ionicConfig) {
+	function ($ionicPlatform, $ionicLoading, $ionicPopup, $ionicHistory, AppLoadLock, AppUpdater, UPDATE_RESULT, $cordovaSplashscreen, $cordovaToast, $log, $rootScope, $ionicConfig) {
 		// 안드로이드에서 헤더 바 가운데 정렬을 강제
 		$ionicConfig.navBar.alignTitle('center');
 
@@ -82,6 +83,34 @@ angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouch
 					}
 				});
 			//업데이트 끝
+
+			//최상단 뷰에서 뒤로가기 버튼을 차단
+			//http://forum.ionicframework.com/t/how-to-use-backbutton-event-best-pratice/3577/17
+			$ionicPlatform.registerBackButtonAction(function (e) {
+				e.preventDefault();
+
+				function showConfirm() {
+					$ionicPopup.confirm({
+						title: '종료',
+						subTitle: '프로그램을 종료하시겠습니까?',
+						okText: '예',
+						okType: 'button-positive',
+						cancelText: '아니오'
+					}).then(function (isOk) {
+						if (isOk) {
+							ionic.Platform.exitApp();
+						}
+					});
+				}
+
+				if ($ionicHistory.backView()) {
+					$ionicHistory.goBack(-1);
+				} else {
+					showConfirm();
+				}
+
+				return false;
+			}, 101);
 
 			if (window.StatusBar) {
 				// org.apache.cordova.statusbar required
