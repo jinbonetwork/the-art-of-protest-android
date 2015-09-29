@@ -38,6 +38,14 @@ ion-content {
 	bottom: 0; /* #32 이슈 수정 */
 }
 
+#post-content ol {
+	list-style: decimal;
+}
+
+#post-content ul {
+	list-style: disc;
+}
+
 #about p {
 	padding-left: 24px;
 	padding-right: 24px;
