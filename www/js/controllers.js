@@ -46,7 +46,7 @@ angular.module('starter.controllers', ['starter.services'])
 		};
 	})
 
-	.controller('HomeCtrl', function($scope, contents, $sce){
+	.controller('HomeCtrl', function ($scope, contents, $sce) {
 		$scope.contents = $sce.trustAsHtml(contents.style.outerHTML + contents.body.innerHTML);
 	})
 
@@ -110,6 +110,7 @@ angular.module('starter.controllers', ['starter.services'])
 
 		$scope.showFilterBar = function () {
 			filterBarInstance = $ionicFilterBar.show({
+				debounce: true,
 				items: $scope.items,
 				update: function (filteredItems) {
 					$scope.items = filteredItems;
@@ -136,7 +137,7 @@ angular.module('starter.controllers', ['starter.services'])
 			});
 		};
 
-		$scope.showFilterBar()
+		$scope.showFilterBar();
 	})
 
 	.controller('BookmarksCtrl', function ($scope, BookmarkService, bookmarks, $log, $cordovaToast) {
