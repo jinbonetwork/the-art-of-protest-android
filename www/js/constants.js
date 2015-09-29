@@ -38,5 +38,9 @@ angular.module('starter.constants', [])
 
 		this.home = config.home;
 		this.api = config.api;
+
+		/**
+		 * 프록시 개발 환경일경우 지정된 경로를 프록시로 바꾸어주는 함수
+		 */
 		this.filter = config.filter;
 	});

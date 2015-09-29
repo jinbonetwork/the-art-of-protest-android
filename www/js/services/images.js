@@ -9,8 +9,7 @@ angular.module('starter.services')
 	 */
 	function ($q, ApiEndpoint) {
 		var generateFileId = function (url) {
-			// TODO 도메인/경로가 다를 경우 중복 파일명 가능성
-			return url.substring(url.lastIndexOf('/') + 1);
+			return url.replace(/[^a-zA-Z0-9]/g, "_");
 		};
 
 		return {
@@ -18,35 +17,24 @@ angular.module('starter.services')
 			 * @param {Array<Element>} imgTags
 			 * @returns {Array<Promise>}
 			 */
-			imgTagsToBlobs: function (imgTags) {
+			cacheImageFromTags: function (imgTags) {
 				return imgTags.map(function (img) {
-					var url = ApiEndpoint.filter(img.src);
-					var filename = generateFileId(url);
+					var src = ApiEndpoint.filter(img.src);
+					var id = generateFileId(img.src);
 
 					return $q(function (resolve, reject) {
-						// 투명 지원과 변환 최소화를 위해 image/png 유지 필요
-						blobUtil.imgSrcToBlob(url, 'image/png', {crossOrigin: 'Anonymous'})
-							.then(function (blob) {
-								resolve({
-									"content_type": "image/png",
-									"filename": filename,
-									"data": blob
-								})
-							})
-							.catch(reject);
-					});
-				});
-			},
+						var sync = ContentSync.sync({src: src, id: id});
 
-			/**
-			 * @param {Array<Blob>} imgTags
-			 * @param {Array<Object>} attachments The PouchDB attachments.
-			 */
-			blobsToImgTags: function (imgTags, attachments) {
-				imgTags.map(function (img) {
-					var filename = generateFileId(img.src);
-					var blob = attachments[filename].data;
-					img.src = blobUtil.createObjectURL(blob);
+						sync.on('complete', function (data) {
+							resolve({
+								id: id,
+								src: src,
+								localPath: data.localPath
+							})
+						});
+
+						sync.on('error', reject);
+					});
 				});
 			}
 		};

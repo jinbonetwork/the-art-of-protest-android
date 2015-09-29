@@ -5,16 +5,15 @@ angular.module('starter.services')
 	 * @ngdoc service
 	 * @name IntroCacheService
 	 * @param {PouchDB} pouchDB
-	 * @param {$log} $log
 	 */
-	function (pouchDB, $log) {
+	function (pouchDB) {
 		var db = pouchDB("intro", {
 			auto_compaction: true
 		});
 		var INTRO_DB_ID = "intro";
 
-		this.get = function (options) {
-			return db.get(INTRO_DB_ID, options);
+		this.get = function () {
+			return db.get(INTRO_DB_ID);
 		};
 
 		/**
@@ -33,14 +32,6 @@ angular.module('starter.services')
 					return false;
 
 				return intro;
-			});
-		};
-
-		this.putAttachment = function (attachments) {
-			return db.get(INTRO_DB_ID).then(function (doc) {
-				doc["_attachments"] = attachments;
-				$log.debug(attachments);
-				return db.put(doc);
 			});
 		};
 	})
@@ -78,14 +69,16 @@ angular.module('starter.services')
 	 * @param {IntroCacheService} IntroCacheService
 	 * @param {IntroParser} IntroParser
 	 * @param {ImageService} ImageService
+	 * @param {$log} $log
 	 */
-	function ($q, RestService, IntroCacheService, IntroParser, ImageService) {
+	function ($q, RestService, IntroCacheService, IntroParser, ImageService, $log) {
 		return {
 			/**
 			 * @returns {Promise}
 			 */
 			update: function () {
 				var result = null;
+				var lastModified = null;
 
 				return RestService.getHome()
 					.then(function (data) {
@@ -93,31 +86,24 @@ angular.module('starter.services')
 						if (_.isUndefined(header)) {
 							header = data.headers()['date'];
 						}
-						var lastModified = new Date(header);
+						lastModified = new Date(header);
 						var raw = data.data;
 
 						// 커스텀 스키마를 이용한 내부 링크 처리
-						var html = raw.replace(/linkto:/g, "#/app/posts/");
-						result = IntroParser.parseHtml(html);
-
-						//TODO 불필요한 업데이트 차단
-						return IntroCacheService.put(html, lastModified)
-					})
-					.then(function () {
-						var promises = ImageService.imgTagsToBlobs(result.images);
+						result = raw.replace(/linkto:/g, "#/app/posts/");
+						var parsed = IntroParser.parseHtml(result);
+						var promises = ImageService.cacheImageFromTags(parsed.images);
 
 						return $q.all(promises);
 					})
 					.then(function (files) {
-						var attachments = {};
 						files.forEach(function (file) {
-							attachments[file.filename] = {
-								"content_type": file.content_type,
-								"data": file.data
-							}
+							$log.debug("다음 이미지를 적용합니다.", file);
+
+							result = result.replace(new RegExp(file.src, "g"), file.localPath);
 						});
 
-						return IntroCacheService.putAttachment(attachments)
+						return IntroCacheService.put(result, lastModified)
 					});
 			}
 		};
@@ -127,29 +113,20 @@ angular.module('starter.services')
 	/**
 	 * @ngdoc factory
 	 * @name IntroService
-	 * @param {$log} $log
 	 * @param {IntroCacheService} IntroCacheService
 	 * @param {IntroParser} IntroParser
-	 * @param {ImageService} ImageService
+	 * @param {$log} $log
 	 */
-	function ($log, IntroCacheService, IntroParser, ImageService) {
+	function (IntroCacheService, IntroParser, $log) {
 		return {
 			/**
 			 * @returns {Promise}
 			 */
 			get: function () {
-				var options = {
-					'attachments': true,
-					'binary': true
-				};
-
-				return IntroCacheService.get(options)
+				return IntroCacheService.get()
 					.then(function (doc) {
-						$log.debug(doc);
-						var result = IntroParser.parseHtml(doc.html);
-						ImageService.blobsToImgTags(result.images, doc._attachments);
-
-						return result;
+						$log.debug("다음 문서를 가져옵니다.", doc);
+						return IntroParser.parseHtml(doc.html);
 					});
 			}
 		};
