@@ -92,7 +92,10 @@ angular.module('starter.services')
 						// 커스텀 스키마를 이용한 내부 링크 처리
 						result = raw.replace(/linkto:/g, "#/app/posts/");
 						var parsed = IntroParser.parseHtml(result);
-						var promises = ImageService.cacheImageFromTags(parsed.images);
+						var srcs = parsed.images.map(function(img){
+							return img.src;
+						});
+						var promises = ImageService.cacheImages(srcs);
 
 						return $q.all(promises);
 					})

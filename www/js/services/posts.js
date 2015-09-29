@@ -50,8 +50,11 @@ angular.module('starter.services')
 	 * @name PostUpdater
 	 * @param {RestService} RestService
 	 * @param {PostDao} PostDao
+	 * @param {ImageService} ImageService
+	 * @param {$q} $q
+	 * @param {$log} $log
 	 */
-	function (RestService, PostDao) {
+	function (RestService, PostDao, ImageService, $q, $log) {
 
 		/**
 		 * 게시물의 정렬기준을 반환한다.
@@ -68,19 +71,40 @@ angular.module('starter.services')
 			 * @returns {Promise}
 			 */
 			updateAll: function () {
-				//TODO attachments 업데이트
+				//TODO 보다 직관적으로 리팩터링
 				return RestService.getPosts()
 					.then(function (response) {
 						var posts = _.chain(response.data.posts)
-							.map(function (obj) {
+							.map(function (post) {
 								//PouchDB ID 추가
-								obj._id = obj.ID + "";
-								return obj;
+								post._id = post.ID + "";
+
+								return post;
 							})
 							.sortBy(postOrder)
 							.value();
 
-						return PostDao.reset(posts);
+						var replacePromises = _(posts).map(function (post) {
+							//첨부파일 저장
+							var images = _(post.attachments).map(function (img) {
+								return img.URL;
+							});
+
+							var promises = ImageService.cacheImages(images);
+
+							return $q.all(promises)
+								.then(function (files) {
+									files.forEach(function (file) {
+										$log.debug("다음 이미지를 적용합니다.", file);
+
+										post.content = post.content.replace(new RegExp(file.src, "g"), file.localPath);
+									});
+								});
+						});
+
+						return $q.all(replacePromises).then(function () {
+							PostDao.reset(posts);
+						});
 					});
 			},
 

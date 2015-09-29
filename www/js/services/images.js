@@ -12,29 +12,33 @@ angular.module('starter.services')
 			return url.replace(/[^a-zA-Z0-9]/g, "_");
 		};
 
+		var sync = function (src, id) {
+			return $q(function (resolve, reject) {
+				var sync = ContentSync.sync({src: src, id: id});
+
+				sync.on('complete', function (data) {
+					resolve({
+						id: id,
+						src: src,
+						localPath: data.localPath
+					})
+				});
+
+				sync.on('error', reject);
+			});
+		};
+
 		return {
 			/**
-			 * @param {Array<Element>} imgTags
+			 * @param {Array<String>} srcs
 			 * @returns {Array<Promise>}
 			 */
-			cacheImageFromTags: function (imgTags) {
-				return imgTags.map(function (img) {
-					var src = ApiEndpoint.filter(img.src);
-					var id = generateFileId(img.src);
+			cacheImages: function (srcs) {
+				return _(srcs).map(function (oldSrc) {
+					var src = ApiEndpoint.filter(oldSrc);
+					var id = generateFileId(oldSrc);
 
-					return $q(function (resolve, reject) {
-						var sync = ContentSync.sync({src: src, id: id});
-
-						sync.on('complete', function (data) {
-							resolve({
-								id: id,
-								src: src,
-								localPath: data.localPath
-							})
-						});
-
-						sync.on('error', reject);
-					});
+					return sync(src, id);
 				});
 			}
 		};
