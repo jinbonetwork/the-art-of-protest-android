@@ -12,7 +12,7 @@
 https://play.google.com/store/apps/details?id=net.jinbo.theartofprotest
 
 ## 앱 지원 범위
-* Android 2.3
+* Android 4.0 이상
 
 ## 개발환경
 * Ionic: HTML5 모바일 앱 개발을 위한 프레임워크
