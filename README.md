@@ -14,24 +14,11 @@ https://play.google.com/store/apps/details?id=net.jinbo.theartofprotest
 ## 앱 지원 범위
 * Android 4.0 이상
 
-## 개발환경
-* Ionic: HTML5 모바일 앱 개발을 위한 프레임워크
-  * http://ionicframework.com/
-  * = 빌드 도구 Gulp
-  * + 패키지 관리자 npm/bower
-  * + MVC 프레임워크 AngularJS
-  * + 내장 UI 프레임워크 (JS, CSS)
-  * + 네이티브 인터페이스 Cordova : https://cordova.apache.org/
-* Crosswalk: 패키징시 웹킷을 내장, 웹뷰가 별도 분리되지 않은 4.0-4.3에서도 최신의 웹킷 기술 지원. Ionic 플러그인 지원
-  * https://crosswalk-project.org
-* PounchDB: NoSQL 데이터베이스인 CouchDB에서 영감을 얻은 오픈소스 자바스크립트 데이터베이스
-  * http://pouchdb.com/
-* Underscore.js: map과 같은 함수형 프로그래밍 헬퍼들을 지원하기 위한 라이브러리
-  * http://underscorejs.org/
-* BabelJS: ES6 → ES5 javascript 컴파일러
-  * https://babeljs.io/
-* IntelliJ/WebStorm: JSDocs와 @ngdoc/@name 지시어 사용시 훌륭한 자동완성 및 검증 지원
-  * https://jetbrains.com/
+## 개발 환경
+* Ionic SDK http://ionicframework.com
+* PouchDB http://pouchdb.com
+* Underscore.js http://underscorejs.org
+* IntelliJ
 
 ## license
 <a href="http://www.jinbo.net" target="_blank">진보네트워크센터</a>, <a href="http://policewatch.jinbo.net/" target="_blank">공권력감시대응팀</a> <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">CC BY-NC-SA</a>
