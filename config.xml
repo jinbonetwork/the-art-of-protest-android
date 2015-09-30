@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="net.jinbo.theartofprotest" version="0.0.3" xmlns="http://www.w3.org/ns/widgets">
-  <name>집회 시위 제대로</name>
-  <description>
+	<name>집회 시위 제대로</name>
+	<description>
 		집회 시위 제대로 메뉴얼
 	</description>
-  <author email="truesig@jinbo.net" href="http://jinbo.net">
+	<author email="truesig@jinbo.net" href="http://jinbo.net">
 		진보네트워크센터
 	</author>
-  <content src="index.html"/>
-  <access origin="http://theartofprotest.jinbo.net"/>
-  <access origin="https://public-api.wordpress.com"/>
-  <access origin="http://*" launch-external="yes"/>
-  <access origin="https://*" launch-external="yes"/>
-  <preference name="orientation" value="portrait"/>
-  <preference name="webviewbounce" value="false"/>
-  <preference name="UIWebViewBounce" value="false"/>
-  <preference name="DisallowOverscroll" value="true"/>
-  <preference name="android-minSdkVersion" value="14" />
-  <preference name="BackupWebStorage" value="none"/>
-  <preference name="SplashScreen" value="screen"/>
-  <preference name="SplashScreenDelay" value="10000"/>
-  <preference name="AutoHideSplashScreen" value="false"/>
-  <preference name="ShowSplashScreenSpinner" value="true"/>
-  <preference name="FadeSplashScreen" value="true"/>
-  <preference name="FadeSplashScreenDuration" value="1.0"/>
-  <feature name="StatusBar">
-    <param name="ios-package" value="CDVStatusBar" onload="true"/>
-  </feature>
-  <platform name="android">
-    <icon src="resources/android/icon/drawable-hdpi-icon.png" density="hdpi"/>
-    <icon src="resources/android/icon/drawable-xhdpi-icon.png" density="xhdpi"/>
-    <icon src="resources/android/icon/drawable-xxhdpi-icon.png" density="xxhdpi"/>
-    <icon src="resources/android/icon/drawable-xxxhdpi-icon.png" density="xxxhdpi"/>
-    <splash src="resources/android/splash/drawable-port-ldpi-screen.png" density="port-ldpi"/>
-    <splash src="resources/android/splash/drawable-port-mdpi-screen.png" density="port-mdpi"/>
-    <splash src="resources/android/splash/drawable-port-hdpi-screen.png" density="port-hdpi"/>
-    <splash src="resources/android/splash/drawable-port-xhdpi-screen.png" density="port-xhdpi"/>
-    <splash src="resources/android/splash/drawable-port-xxhdpi-screen.png" density="port-xxhdpi"/>
-    <splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
-  </platform>
-  <preference name="xwalkVersion" value="14+" />
-  <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
-  <preference name="xwalkMode" value="embedded" />
+	<content src="index.html"/>
+	<access origin="http://theartofprotest.jinbo.net"/>
+	<access origin="https://public-api.wordpress.com"/>
+	<access origin="http://*" launch-external="yes"/>
+	<access origin="https://*" launch-external="yes"/>
+	<preference name="orientation" value="portrait"/>
+	<preference name="webviewbounce" value="false"/>
+	<preference name="UIWebViewBounce" value="false"/>
+	<preference name="DisallowOverscroll" value="true"/>
+	<preference name="android-minSdkVersion" value="14"/>
+	<preference name="BackupWebStorage" value="none"/>
+	<preference name="SplashScreen" value="screen"/>
+	<preference name="SplashScreenDelay" value="10000"/>
+	<preference name="AutoHideSplashScreen" value="false"/>
+	<preference name="ShowSplashScreenSpinner" value="true"/>
+	<preference name="FadeSplashScreen" value="true"/>
+	<preference name="FadeSplashScreenDuration" value="1.0"/>
+	<feature name="StatusBar">
+		<param name="ios-package" value="CDVStatusBar" onload="true"/>
+	</feature>
+	<platform name="android">
+		<icon src="resources/android/icon/drawable-hdpi-icon.png" density="hdpi"/>
+		<icon src="resources/android/icon/drawable-xhdpi-icon.png" density="xhdpi"/>
+		<icon src="resources/android/icon/drawable-xxhdpi-icon.png" density="xxhdpi"/>
+		<icon src="resources/android/icon/drawable-xxxhdpi-icon.png" density="xxxhdpi"/>
+		<splash src="resources/android/splash/drawable-port-ldpi-screen.png" density="port-ldpi"/>
+		<splash src="resources/android/splash/drawable-port-mdpi-screen.png" density="port-mdpi"/>
+		<splash src="resources/android/splash/drawable-port-hdpi-screen.png" density="port-hdpi"/>
+		<splash src="resources/android/splash/drawable-port-xhdpi-screen.png" density="port-xhdpi"/>
+		<splash src="resources/android/splash/drawable-port-xxhdpi-screen.png" density="port-xxhdpi"/>
+		<splash src="resources/android/splash/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
+	</platform>
+	<preference name="xwalkVersion" value="14+"/>
+	<preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect"/>
+	<preference name="xwalkMode" value="embedded"/>
 </widget>
