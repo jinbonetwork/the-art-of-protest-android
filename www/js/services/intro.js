@@ -28,8 +28,10 @@ angular.module('starter.services')
 			};
 
 			return db.upsert(INTRO_DB_ID, function (doc) {
-				if (intro.modified == doc.modified)
-					return false;
+				/*
+				 if (intro.modified == doc.modified)
+				 return false;
+				 */
 
 				return intro;
 			});
@@ -78,21 +80,18 @@ angular.module('starter.services')
 			 */
 			update: function () {
 				var result = null;
-				var lastModified = null;
+				var lastModified = new Date();
 
 				return RestService.getHome()
 					.then(function (data) {
-						var header = data.headers()['last-modified'];
-						if (_.isUndefined(header)) {
-							header = data.headers()['date'];
-						}
-						lastModified = new Date(header);
 						var raw = data.data;
 
 						// 커스텀 스키마를 이용한 내부 링크 처리
 						result = raw.replace(/linkto:/g, "#/app/posts/");
+						/*
 						var parsed = IntroParser.parseHtml(result);
-						var srcs = parsed.images.map(function(img){
+
+						var srcs = parsed.images.map(function (img) {
 							return img.src;
 						});
 						var promises = ImageService.cacheImages(srcs);
@@ -105,6 +104,7 @@ angular.module('starter.services')
 
 							result = result.replace(new RegExp(file.src, "g"), file.localPath);
 						});
+						*/
 
 						return IntroCacheService.put(result, lastModified)
 					});

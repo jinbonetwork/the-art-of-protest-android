@@ -84,6 +84,7 @@ angular.module('starter.services')
 							.sortBy(postOrder)
 							.value();
 
+						/*
 						var replacePromises = _(posts).map(function (post) {
 							//첨부파일 저장
 							var images = _(post.attachments).map(function (img) {
@@ -105,6 +106,9 @@ angular.module('starter.services')
 						return $q.all(replacePromises).then(function () {
 							PostDao.reset(posts);
 						});
+						*/
+
+						PostDao.reset(posts);
 					});
 			},
 
