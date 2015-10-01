@@ -1,4 +1,4 @@
-﻿.clear {
+.clear {
   zoom: 1;
 }
 .clear:before,
@@ -115,7 +115,12 @@ img.banner,
   display: block;
   clear: both;
 }
+.builder-section:last-child {
+  border-bottom: 0 none;
+}
 body {
+  margin: 0;
+  padding: 0;
   background-color: #ffffff;
   text-rendering: optimizeLegibility;
   font-size: 16px;
@@ -309,10 +314,8 @@ sub {
   line-height: 1.2;
   color: #929292;
 }
-.builder-section .builder-section-content .builder-text-content a:before {
-  display: inline;
-  content: '��';
-  padding-right: 3px;
+.builder-section .builder-section-content .builder-text-content a {
+	border-bottom: 1px dashed;
 }
 .builder-section .builder-section-content {
   width: auto;
@@ -1251,14 +1254,14 @@ img.alignright {
 .alignleft.alignleft,
 .alignright.alignleft {
   float: left;
-  margin: 1em 30px 30px 0;
+  margin: 0 1em 1em 0;
 }
 .alignnone.alignright,
 .aligncenter.alignright,
 .alignleft.alignright,
 .alignright.alignright {
   float: right;
-  margin: 1em 0 30px 30px;
+  margin: 0 0 1em 1em;
 }
 img.alignleft.alignright,
 img.alignright.alignright {
