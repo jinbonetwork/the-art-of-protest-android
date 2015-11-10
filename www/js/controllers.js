@@ -129,8 +129,8 @@ angular.module('starter.controllers', ['starter.services'])
 								that.update([{"title": "해당되는 문서가 없습니다."}])
 							}
 						}).catch(function () {
-							that.update([{"title": "찾는 중 오류가 발생했습니다."}])
-						});
+						that.update([{"title": "찾는 중 오류가 발생했습니다."}])
+					});
 
 					return [{"title": "찾는 중입니다..."}]
 				}
