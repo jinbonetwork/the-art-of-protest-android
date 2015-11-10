@@ -7,6 +7,7 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var replace = require('replace');
 var sh = require('shelljs');
+var karmaServer = require('karma').Server;
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -72,4 +73,15 @@ gulp.task('remove-proxy', function() {
     recursive: false,
     silent: false
   });
+});
+
+gulp.task('test', function(done) {
+  var karma = new karmaServer({
+    configFile: __dirname + '/tests/test.conf.js',
+    singleRun: true
+  }, function() {
+    done();
+  });
+
+  karma.start();
 });
