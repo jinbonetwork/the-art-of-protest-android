@@ -23,5 +23,6 @@
 * Underscore.js http://underscorejs.org
 * IntelliJ
 
-## license
-<a href="http://www.jinbo.net" target="_blank">진보네트워크센터</a>, <a href="http://policewatch.jinbo.net/" target="_blank">공권력감시대응팀</a> <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">CC BY-NC-SA</a>
+## License
+* 소스코드 : Apache License, Version 2.0
+* 이미지 및 텍스트 : <a href="http://www.jinbo.net" target="_blank">진보네트워크센터</a>, <a href="http://policewatch.jinbo.net/" target="_blank">공권력감시대응팀</a> <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">CC BY-NC-SA</a>
