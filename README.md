@@ -9,7 +9,10 @@
 관련 소개 페이지: http://lab.jinbo.net/projects/the-art-of-protest
 
 ## 앱 다운로드
-https://play.google.com/store/apps/details?id=net.jinbo.theartofprotest
+<a href="https://play.google.com/store/apps/details?id=net.jinbo.theartofprotest">
+  <img alt="Get it on Google Play"
+       src="https://developer.android.com/images/brand/ko_generic_rgb_wo_60.png" />
+</a>
 
 ## 앱 지원 범위
 * Android 4.0 이상
