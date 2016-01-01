@@ -37,10 +37,6 @@ angular.module('starter.controllers', ['starter.services'])
 			$scope.modal = modal;
 		});
 
-		$scope.closeNotice = function () {
-			$scope.modal.hide();
-		};
-
 		$scope.showNotice = function () {
 			$scope.modal.show();
 		};
