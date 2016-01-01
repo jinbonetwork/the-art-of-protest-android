@@ -2,8 +2,8 @@
   "name": "HelloIonic",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.1.1",
-    "ngCordova": "~0.1.20-alpha",
+    "ionic": "~1.2.2",
+    "ngCordova": "~0.1.23-alpha",
     "pouchdb": "~5.1.0",
     "underscore": "~1.8.3",
     "pouchdb-upsert": "~1.1.3",
