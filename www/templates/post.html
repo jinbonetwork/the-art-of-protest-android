@@ -4,7 +4,7 @@
 				ng-class="bookmarkRev !== null ? 'ion-ios-star' : 'ion-ios-star-outline'"
 				ng-click="toggleBookmark()"></button>
 	</ion-nav-buttons>
-	<ion-content>
+	<ion-content id="post-pane">
 		<div id="post-header">
 			<h1>{{::postTitle}}</h1>
 			<span class="update">최종 업데이트 : {{::postDate | date:'yyyy-MM-dd'}}</span>

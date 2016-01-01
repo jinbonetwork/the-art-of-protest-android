@@ -30,6 +30,14 @@ ion-content {
 	background-color: #f7f7f7;
 }
 
+/* SASS 적용시 mixin 으로 개선 요망 */
+#post-pane>.scroll, #notice-content>.scroll, #home-pane>.scroll {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+}
+
 #post-header .update {
 	font-size: 0.7em;
 }
