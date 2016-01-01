@@ -99,7 +99,7 @@ angular.module('starter.services')
 				list: function () {
 					return NoticeDao.list()
 						.then(function (result) {
-							return _.chain(result.rows)
+							return _(result.rows)
 								.map(function (obj) {
 									return obj.doc;
 								})
@@ -117,15 +117,14 @@ angular.module('starter.services')
 				getAvailable: function () {
 					return NoticeDao.list()
 						.then(function (result) {
-							return _.chain(result.rows)
+							return _(result.rows)
 								.map(function (obj) {
 									return obj.doc;
 								})
 								.sortBy(function (notice) {
 									return notice.ID;
 								})
-								.last()
-								.value();
+								.last();
 						});
 				},
 

@@ -53,7 +53,7 @@ angular.module('starter.services')
 				update: function () {
 					return RestService.getPostsByCategory()
 						.then(function (response) {
-							var categories = _.chain(response.data.posts)
+							var categories = _(response.data.posts)
 								.groupBy(function (post) {
 									var title = Object.keys(post.categories)[0];
 									return post.categories[title].ID;
@@ -62,14 +62,16 @@ angular.module('starter.services')
 									var head = posts[0];
 									var categoryTitle = Object.keys(head.categories)[0];
 									var category = head.categories[categoryTitle];
-									var order = _.chain(posts).map(function (p) {
-										return p.menu_order
-									}).min().value();
+									var order = _(posts)
+										.map(function (p) {
+											return p.menu_order;
+										})
+										.min();
 
 									return {
 										"ID": category.ID + "", // PouchDB를 위해 String 처리
 										"title": categoryTitle,
-										"posts": _(posts).sortBy(function (p) {
+										"posts": _.sortBy(posts, function (p) {
 											return p.menu_order
 										}),
 										"order": order
@@ -109,7 +111,7 @@ angular.module('starter.services')
 				list: function () {
 					return CategoryDao.list()
 						.then(function (result) {
-							return _.chain(result.rows)
+							return _(result.rows)
 								.map(function (obj) {
 									return obj.doc;
 								})

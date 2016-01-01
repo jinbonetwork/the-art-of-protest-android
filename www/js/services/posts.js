@@ -74,7 +74,7 @@ angular.module('starter.services')
 					//TODO 보다 직관적으로 리팩터링
 					return RestService.getPosts()
 						.then(function (response) {
-							var posts = _.chain(response.data.posts)
+							var posts = _(response.data.posts)
 								.map(function (post) {
 									//PouchDB ID 추가
 									post._id = post.ID + "";
@@ -85,9 +85,9 @@ angular.module('starter.services')
 								.value();
 
 							/*
-							 var replacePromises = _(posts).map(function (post) {
+							 var replacePromises = _.map(posts, function (post) {
 							 //첨부파일 저장
-							 var images = _(post.attachments).map(function (img) {
+							 var images = _.map(post.attachments, function (img) {
 							 return img.URL;
 							 });
 
@@ -155,7 +155,7 @@ angular.module('starter.services')
 				list: function () {
 					return PostDao.list()
 						.then(function (result) {
-							return _.chain(result.rows)
+							return _(result.rows)
 								.map(function (obj) {
 									return obj.doc;
 								})

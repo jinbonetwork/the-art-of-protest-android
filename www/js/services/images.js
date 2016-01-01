@@ -34,7 +34,7 @@ angular.module('starter.services')
 				 * @returns {Array<Promise>}
 				 */
 				cacheImages: function (srcs) {
-					return _(srcs).map(function (oldSrc) {
+					return _.map(srcs, function (oldSrc) {
 						var src = ApiEndpoint.filter(oldSrc);
 						var id = generateFileId(oldSrc);
 
