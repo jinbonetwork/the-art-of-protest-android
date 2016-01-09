@@ -2,6 +2,7 @@
   "name": "HelloIonic",
   "private": "true",
   "devDependencies": {
+    "jquery": "~2.2.0",
     "ionic": "~1.2.2",
     "ngCordova": "~0.1.23-alpha",
     "pouchdb": "~5.1.0",

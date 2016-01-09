@@ -1,0 +1,13 @@
+<ion-modal-view>
+	<ion-header-bar>
+		<h1 class="title">{{ imgTitle }}</h1>
+
+		<button class="button button-clear button-primary" ng-click="modal.hide()">닫기</button>
+	</ion-header-bar>
+	<ion-content class="padding" scroll="false">
+		<ion-scroll zooming="true" direction="xy" delegate-handle="zoom-pane" class="zoom-pane" min-zoom="1"
+					scrollbar-x="false" scrollbar-y="false" overflow-scroll="false">
+			<img ng-src="{{ imgUrl }}">
+		</ion-scroll>
+	</ion-content>
+</ion-modal-view>

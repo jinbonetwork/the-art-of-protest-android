@@ -75,7 +75,7 @@ angular.module('starter.controllers', ['starter.services'])
 	})
 
 	.controller('PostCtrl', function ($scope, PostService, BookmarkService, $cordovaToast,
-									  post, initBookmarkRev, $log, $sce) {
+									  post, initBookmarkRev, $log, $sce, $ionicModal) {
 		$scope.postTitle = post.title;
 		$scope.postDate = _.isUndefined(post.modified) ? post.date : post.modified;
 		$scope.postContent = $sce.trustAsHtml(post.content);
@@ -96,7 +96,19 @@ angular.module('starter.controllers', ['starter.services'])
 						$cordovaToast.showShortTop('북마크가 설정되었습니다.');
 					}, $log.error)
 			}
-		}
+		};
+
+		$ionicModal.fromTemplateUrl('templates/image_modal.html', {
+			scope: $scope
+		}).then(function (modal) {
+			$scope.modal = modal;
+		});
+
+		$scope.openModal = function (title, url) {
+			$scope.modal.show();
+			$scope.imgTitle = title;
+			$scope.imgUrl = url;
+		};
 	})
 
 	.controller('SearchCtrl', function ($scope, $ionicFilterBar, PostService, $timeout, $log) {

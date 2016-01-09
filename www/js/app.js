@@ -1,4 +1,9 @@
-angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ngCordova', 'jett.ionic.filter.bar', 'pouchdb', 'starter.controllers', 'starter.directives'])
+	/*
+	.config(function($logProvider){
+		$logProvider.debugEnabled(true);
+	})
+	*/
 
 	.run(
 		/**
