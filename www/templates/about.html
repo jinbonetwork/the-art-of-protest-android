@@ -1,36 +1,36 @@
 <ion-view view-title="정보">
 	<ion-content id="about">
-		<table class="table update">
-			<tr>
-				<th>최종업데이트</th>
-				<td>{{::lastUpdate | date:'yyyy/MM/dd'}}</td>
-			</tr>
-		</table>
-		<table class="table about">
-			<tr>
-				<th>제작</th>
-				<td>
-					진보네트워크센터<br/>
-					공권력감시대응팀
-				</td>
-			</tr>
-			<tr>
-				<th>개발</th>
-				<td>한기종, 소유</td>
-			</tr>
-			<tr>
-				<th>삽화</th>
-				<td>김곰</td>
-			</tr>
-			<tr>
-				<th>교정</th>
-				<td>김재훈</td>
-			</tr>
-			<tr>
-				<th>문의</th>
-				<td><a href="mailto:truesig@jinbo.net">truesig@jinbo.net</a></td>
-			</tr>
-		</table>
+		<div class="update">
+			<strong>최종업데이트</strong>
+			{{::lastUpdate | date:'yyyy/MM/dd'}}
+		</div>
+		<div class="about">
+			<table class="table about">
+				<tr>
+					<th>제작</th>
+					<td>
+						진보네트워크센터<br/>
+						공권력감시대응팀
+					</td>
+				</tr>
+				<tr>
+					<th>앱 개발</th>
+					<td>한기종, 소유</td>
+				</tr>
+				<tr>
+					<th>삽화</th>
+					<td>김곰</td>
+				</tr>
+				<tr>
+					<th>교정</th>
+					<td>김재훈</td>
+				</tr>
+				<tr>
+					<th>문의</th>
+					<td><a href="mailto:truesig@jinbo.net">truesig@jinbo.net</a></td>
+				</tr>
+			</table>
+		</div>
 		<p>* 집회시위 제대로 앱은 아름다운재단의 2015 변화의시나리오로 제작되었습니다.</p>
 	</ion-content>
 </ion-view>

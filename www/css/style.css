@@ -59,32 +59,32 @@ ion-content {
 	padding-right: 24px;
 }
 
-#about table.table {
+#about div.update {
 	width: 100%;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#about table.table th {
-	width: 50%;
-	font-weight: bold;
-	text-align: right;
+	font-size: 80%;
+	background-color: #ff7200;
+	color: white;
+	text-align: center;
 	padding: 10px;
 }
 
-#about table.table td {
-	width: 50%;
+#about div.about {
+	width: 100%;
+	background-color: #F7F7F7;
+	padding-top: 25px;
+	padding-bottom: 25px;
+	margin-bottom: 25px;
+}
+
+#about table.about {
+	margin-left: auto;
+	margin-right: auto;
 	text-align: left;
 }
 
-#about table.table.about {
-	margin-top: 24px;
-	margin-bottom: 40px;
-}
-
-#about table.table.update {
-	background-color: #ff7200;
-	color: white;
+#about table.about th {
+	font-weight: bold;
+	padding: 10px 20px 10px 10px;
 }
 
 /*TODO 기본 포함된 대응 아이템 찾아 변경 */
