@@ -90,7 +90,10 @@ angular.module('starter.controllers', ['starter.services'])
 						$cordovaToast.showShortTop('북마크가 해제되었습니다.');
 					}, $log.error)
 			} else {
-				BookmarkService.add(post.ID, post.title, post.excerpt)
+				// 북마크 추가시 <p> 태그 등을 제거하고 텍스트만을 사용
+				var excerpt = $(post.excerpt).text();
+
+				BookmarkService.add(post.ID, post.title, excerpt)
 					.then(function (result) {
 						$scope.bookmarkRev = result.rev;
 						$cordovaToast.showShortTop('북마크가 설정되었습니다.');
