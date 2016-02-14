@@ -44,27 +44,6 @@ angular.module('starter.services')
 			var HOME_KEY = "HOME_VERSION";
 			var POST_KEY = "POST_VERSION";
 
-			var checkUpdate = function () {
-				var homeVersion = LocalStorage.get(HOME_KEY);
-				var postVersion = LocalStorage.get(POST_KEY);
-
-				// TODO 홈 화면의 버전 확인
-				return RestService.getVersion()
-					.then(function (response) {
-						var currPostVersion = new Date(response.data.content_version * 1000).toJSON();
-						$log.debug("로컬 버전 : " + currPostVersion);
-						$log.debug("서버 버전 : " + postVersion);
-
-						if (_.isUndefined(postVersion) || currPostVersion != postVersion) {
-							$log.info("업데이트가 필요합니다.");
-							return currPostVersion;
-						} else {
-							$log.info("최신으로 업데이트되어 있습니다.");
-							return false;
-						}
-					});
-			};
-
 			return {
 				getLastUpdate: function () {
 					var postVersion = LocalStorage.get(POST_KEY);
@@ -80,29 +59,45 @@ angular.module('starter.services')
 				 * @returns {Promise}
 				 */
 				update: function () {
-					return checkUpdate()
-						.then(function (newestPostVersion) {
-							if (newestPostVersion !== false) {
+					return RestService.getVersion()
+						.then(function (response) {
+							var homeVersion = LocalStorage.get(HOME_KEY);
+							var postVersion = LocalStorage.get(POST_KEY);
+
+							var currHomeVersion = new Date(response.data.home_version * 1000).toJSON();
+							var currPostVersion = new Date(response.data.content_version * 1000).toJSON();
+
+							$log.debug(`홈 버전 : 로컬(${currHomeVersion}), 서버(${homeVersion})`);
+							$log.debug(`컨텐트 버전 : 로컬(${currPostVersion}), 서버(${postVersion})`);
+
+							var updates = [];
+
+							if (_.isUndefined(postVersion) || currPostVersion != postVersion) {
+								updates.push(
+									CategoryUpdater.update(),
+									PostUpdater.updateAll(),
+									NoticeUpdater.updateAll()
+								);
+							}
+
+							if (_.isUndefined(homeVersion) || currHomeVersion != homeVersion) {
+								updates.push(
+									IntroUpdater.update()
+								);
+							}
+
+							if (updates.length > 0) {
 								$log.info("업데이트를 시작합니다.");
 
-								return $q.all([
-									// 홈 업데이트
-									IntroUpdater.update(),
-									// 카테고리 업데이트
-									CategoryUpdater.update(),
-									// 글 업데이트
-									PostUpdater.updateAll(),
-									// TODO 개별 update() 호출
-									// 공지 업데이트
-									NoticeUpdater.updateAll()
-									// TODO 설정 확인
-								]).then(function () {
+								return $q.all(updates).then(function () {
 									$log.info("업데이트가 완료되었습니다.");
-									LocalStorage.set(POST_KEY, newestPostVersion);
+									LocalStorage.set(HOME_KEY, currHomeVersion);
+									LocalStorage.set(POST_KEY, currPostVersion);
 									return UPDATE_RESULT.UPDATED;
 								});
 							}
 
+							$log.info("이미 최신입니다.");
 							return UPDATE_RESULT.ALREADY;
 						}).catch(function (err) {
 							//TODO err 분석
