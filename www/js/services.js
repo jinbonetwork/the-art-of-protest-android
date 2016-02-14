@@ -45,17 +45,8 @@ angular.module('starter.services', ['starter.constants'])
 					});
 				},
 
-				getPostVersion: function () {
-					return $http({
-						method: 'GET',
-						url: ApiEndpoint.api + "/posts/",
-						params: {
-							'order_by': 'modified',
-							'status': 'publish',
-							'number': 1,
-							'fields': 'modified'
-						}
-					});
+				getVersion: function () {
+					return $http.get(ApiEndpoint.version);
 				},
 
 				/**

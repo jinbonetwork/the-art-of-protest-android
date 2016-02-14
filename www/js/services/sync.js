@@ -49,11 +49,11 @@ angular.module('starter.services')
 				var postVersion = LocalStorage.get(POST_KEY);
 
 				// TODO 홈 화면의 버전 확인
-				return RestService.getPostVersion()
+				return RestService.getVersion()
 					.then(function (response) {
-						var currPostVersion = response.data.posts[0].modified;
-						$log.debug(currPostVersion);
-						$log.debug(postVersion);
+						var currPostVersion = new Date(response.data.content_version * 1000).toJSON();
+						$log.debug("로컬 버전 : " + currPostVersion);
+						$log.debug("서버 버전 : " + postVersion);
 
 						if (_.isUndefined(postVersion) || currPostVersion != postVersion) {
 							$log.info("업데이트가 필요합니다.");

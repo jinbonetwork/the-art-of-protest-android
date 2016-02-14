@@ -19,4 +19,18 @@ describe('RestService Unit Tests', function () {
 
 		$httpBackend.flush();
 	});
+
+	it('should return a version object', function () {
+		$httpBackend.whenGET(ApiEndpoint.version).respond({
+			home_version: 1441370337,
+			content_version: 1441561815
+		});
+
+		RestService.getVersion().then(function (data) {
+			expect(data.data.home_version).toBe(1441370337);
+			expect(data.data.content_version).toBe(1441561815);
+		});
+
+		$httpBackend.flush();
+	});
 });
